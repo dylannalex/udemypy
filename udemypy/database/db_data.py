@@ -1,0 +1,5 @@
+from os import getenv
+
+CLEARDB_DATABASE_URL = getenv('CLEARDB_DATABASE_URL')
+COURSE_LIFETIME = int(getenv('COURSE_LIFETIME'))
+TABLE_NAME = getenv('TABLE_NAME')
