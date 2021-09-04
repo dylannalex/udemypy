@@ -28,3 +28,10 @@ def retrieve_courses(cursor) -> list:
             {"title": row[0], "link": row[1], "date": row[2].strftime("%Y-%m-%d")}
         )
     return courses_added
+
+
+def remove_courses(db, courses) -> None:
+    cursor = db.cursor()
+    for course in courses:
+        cursor.execute(f"""DELETE FROM {TABLE_NAME} WHERE title='{course['title']}';""")
+    db.commit()
