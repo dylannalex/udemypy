@@ -1,8 +1,8 @@
-# UdemyPy
+# UdemyPy :robot:	
 
 UdemyPy is a bot that hourly looks for Udemy free courses and post them in my Telegram Channel: [Free Courses](https://t.me/freecourses000).
 
-## How does it work?
+## :electric_plug: How does it work?
 
 For publishing new courses, UdemyPy follows these steps:
 
@@ -12,14 +12,14 @@ For publishing new courses, UdemyPy follows these steps:
 
 This process is run hourly, everyday.
 
-## How are repeated courses detected?
+## :electric_plug: How are repeated courses detected?
 
 Since UdemyPy scrapes different websites constantly, it must remember which courses have already been shared to [Free Courses](https://t.me/freecourses000).<br/>
 Every hour UdemyPy gets a list of free Udemy courses: `courses_found`. This list contains courses which haven't been shared yet and courses that have.<br/>
 For each course in `courses_found`, UdemyPy tries to add it to the database. If it fails, the course is already in the database (therefore the course has already been shared). If it success, the course is stored in a `new_courses` list.<br/>
 Finally, the `new_courses` list is sent to [Free Courses](https://t.me/freecourses000).
 
-## Enviroment Variables
+## :electric_plug: Enviroment Variables
 
 _**FILE:**_ udemypy/udemy/bot_settings.py
 
