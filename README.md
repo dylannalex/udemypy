@@ -1,5 +1,9 @@
 # UdemyPy :robot:	
 
+<p align="center">
+  <img width="200" height="200" src="../media/udemypy-logo.png?raw=true">
+</p>
+
 UdemyPy is a bot that hourly looks for Udemy free courses and post them in my Telegram Channel: [Free Courses](https://t.me/freecourses000).
 
 ## :electric_plug: How does it work?
