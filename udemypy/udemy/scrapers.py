@@ -1,3 +1,4 @@
+from abc import ABC, abstractmethod
 from datetime import datetime
 from bs4 import BeautifulSoup as bs
 import urllib3
@@ -7,12 +8,16 @@ import requests
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
-class Scraper:
+class Scraper(ABC):
 
     HEAD = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36",
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
     }
+
+    @abstractmethod
+    def find_courses(self) -> None:
+        pass
 
     def _get_all(self, pages, website, tags, class_=None):
         self.courses = []
