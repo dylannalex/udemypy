@@ -6,13 +6,13 @@ from udemypy.text import markdown_validation
 from udemypy.tgm import data, messages
 
 
-def connect() -> Dispatcher:
+def _connect() -> Dispatcher:
     bot = telegram.Bot(token=data.TOKEN)
     updater = Updater(bot.token, use_context=True)
     return updater.dispatcher
 
 
-def send_course(dispatcher, course) -> None:
+def _send_course(dispatcher, course) -> None:
     course_title = markdown_validation.get_valid_text(course["title"])
     course_link = course["link"]
 
@@ -36,3 +36,9 @@ def send_course(dispatcher, course) -> None:
             [[get_course_button], [share_button, donate_button]]
         ),
     )
+
+
+def send_courses(courses) -> None:
+    dispatcher = _connect()
+    for course in courses:
+        _send_course(dispatcher, course)
