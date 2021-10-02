@@ -1,4 +1,4 @@
-from udemypy.tgm.text import emojis
+from udemypy.text import emojis
 
 
 get_course_button_text = f"Get course {emojis.PERSON_RUNNING}"

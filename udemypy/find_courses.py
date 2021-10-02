@@ -1,6 +1,6 @@
 from udemypy.udemy import courses
 from udemypy.database import connection, db_management
-from udemypy.tgm import bot
+from udemypy.tgm import tgm_bot
 
 
 def main() -> None:
@@ -12,9 +12,9 @@ def main() -> None:
     courses_added = db_management.add_courses(db, courses_found)
 
     # Send courses to Telegram channel
-    dispatcher = bot.connect()
+    dispatcher = tgm_bot.connect()
     for course in courses_added:
-        bot.send_course(dispatcher, course)
+        tgm_bot.send_course(dispatcher, course)
 
 
 if __name__ == "__main__":

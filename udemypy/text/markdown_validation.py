@@ -21,15 +21,15 @@ SPECIAL_CHARS = (
 )
 
 
-def get_valid_msg(msg):
+def get_valid_text(text):
     """
-    Returns the msg but with a backslash added behind all special characters
+    Returns the text but with a backslash added behind all special characters
     """
-    valid_msg = ""
-    for character in str(msg):
+    valid_text = ""
+    for character in str(text):
         if character in SPECIAL_CHARS:
-            valid_msg += f"\\{character}"
+            valid_text += f"\\{character}"
         else:
-            valid_msg += character
+            valid_text += character
 
-    return valid_msg
+    return valid_text
