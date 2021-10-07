@@ -98,7 +98,8 @@ class TutorialBarScraper(Scraper):
             url = items.a["href"]
             r = requests.get(url)
             soup = bs(r.content, "html5lib")
-            link = soup.find("a", class_="btn_offer_block re_track_btn")["href"]
-
+            class_ = soup.find("a", class_="btn_offer_block re_track_btn")
+            if class_:
+                link = class_["href"]
             if "www.udemy.com" in link:
                 self._add_course(title, link)
