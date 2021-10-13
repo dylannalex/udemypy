@@ -28,12 +28,16 @@ def _send_course(dispatcher, course) -> None:
         text=messages.donate_button_text, url=data.DONATE_ME_LINK
     )
 
+    twitter_button = InlineKeyboardButton(
+        text=messages.twitter_button_text, url=data.TWITTER_LINK
+    )
+
     dispatcher.bot.sendMessage(
         parse_mode="MarkdownV2",
         text=messages.message_title(course_link, course_title),
         chat_id=data.CHANNEL_ID,
         reply_markup=InlineKeyboardMarkup(
-            [[get_course_button], [share_button, donate_button]]
+            [[get_course_button], [share_button, donate_button], [twitter_button]]
         ),
     )
 
