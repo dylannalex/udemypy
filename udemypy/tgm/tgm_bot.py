@@ -46,3 +46,22 @@ def send_courses(courses) -> None:
     dispatcher = _connect()
     for course in courses:
         _send_course(dispatcher, course)
+
+
+def send_message(message, buttons=None, disable_web_page_preview=True) -> None:
+    dispatcher = _connect()
+    if buttons:
+        dispatcher.bot.sendMessage(
+            parse_mode="MarkdownV2",
+            text=message,
+            chat_id=data.CHANNEL_ID,
+            reply_markup=InlineKeyboardMarkup(buttons),
+            disable_web_page_preview=disable_web_page_preview,
+        )
+    else:
+        dispatcher.bot.sendMessage(
+            parse_mode="MarkdownV2",
+            text=message,
+            chat_id=data.CHANNEL_ID,
+            disable_web_page_preview=disable_web_page_preview,
+        )
