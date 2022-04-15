@@ -24,10 +24,6 @@ def _send_course(dispatcher, course) -> None:
         text=messages.share_button_text, url=data.CHANNEL_LINK
     )
 
-    donate_button = InlineKeyboardButton(
-        text=messages.donate_button_text, url=data.DONATE_ME_LINK
-    )
-
     twitter_button = InlineKeyboardButton(
         text=messages.twitter_button_text, url=data.TWITTER_LINK
     )
@@ -37,7 +33,7 @@ def _send_course(dispatcher, course) -> None:
         text=messages.message_title(course_link, course_title),
         chat_id=data.CHANNEL_ID,
         reply_markup=InlineKeyboardMarkup(
-            [[get_course_button], [share_button, donate_button], [twitter_button]]
+            [[get_course_button], [share_button, twitter_button]]
         ),
     )
 
