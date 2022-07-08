@@ -8,7 +8,13 @@ import requests
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
-class Scraper(ABC):
+"""
+Courses scrapers:
+Scrape Udemy courses links from a free courses website.
+"""
+
+
+class CoursesScraper(ABC):
 
     HEAD = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36",
@@ -40,7 +46,7 @@ class Scraper(ABC):
             self.courses.append({"title": title, "link": link, "date": self.date})
 
 
-class DiscudemyScraper(Scraper):
+class DiscudemyScraper(CoursesScraper):
     def __init__(self, pages):
         super().__init__()
         website = "https://www.discudemy.com/all/"
@@ -66,7 +72,7 @@ class DiscudemyScraper(Scraper):
             self._add_course(title, link)
 
 
-class UdemyFreebiesScraper(Scraper):
+class UdemyFreebiesScraper(CoursesScraper):
     def __init__(self, pages):
         super().__init__()
         website = "https://www.udemyfreebies.com/free-udemy-courses/"
@@ -84,7 +90,7 @@ class UdemyFreebiesScraper(Scraper):
             self._add_course(title, link)
 
 
-class TutorialBarScraper(Scraper):
+class TutorialBarScraper(CoursesScraper):
     def __init__(self, pages):
         super().__init__()
         website = "https://www.tutorialbar.com/all-courses/page/"
@@ -103,3 +109,26 @@ class TutorialBarScraper(Scraper):
                 link = class_["href"]
             if "www.udemy.com" in link:
                 self._add_course(title, link)
+
+
+"""
+Udemy scraper:
+Scrape Udemy course statistics (rating, students, etc).
+"""
+
+
+class UdemyScraper:
+    def __init__(self, course_link: str):
+        r = requests.get(course_link)
+        self.soup = bs(r.content, "html5lib")
+        self.course_link = course_link
+
+    def get_rating(self):
+        rating = self.soup.find(
+            "span", class_="udlite-heading-sm star-rating--rating-number--2o8YM"
+        )
+        return rating.text
+
+    def get_students(self):
+        students = self.soup.find("div", class_="enrollment")
+        return students.text.split(" ")[0]
