@@ -13,8 +13,10 @@ def _connect() -> Dispatcher:
 
 
 def _send_course(dispatcher, course) -> None:
-    course_title = markdown_validation.get_valid_text(course["title"])
-    course_link = course["link"]
+    title = markdown_validation.get_valid_text(course["title"])
+    link = course["link"]
+    rating = markdown_validation.get_valid_text(course["rating"])
+    students = markdown_validation.get_valid_text(course["students"])
 
     get_course_button = InlineKeyboardButton(
         text=messages.get_course_button_text, url=course["link"]
@@ -30,7 +32,7 @@ def _send_course(dispatcher, course) -> None:
 
     dispatcher.bot.sendMessage(
         parse_mode="MarkdownV2",
-        text=messages.message_title(course_link, course_title),
+        text=messages.message_title(title, link, rating, students),
         chat_id=data.CHANNEL_ID,
         reply_markup=InlineKeyboardMarkup(
             [[get_course_button], [share_button, twitter_button]]
