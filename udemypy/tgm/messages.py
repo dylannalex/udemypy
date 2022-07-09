@@ -10,5 +10,11 @@ donate_button_text = f"Donate me {emojis.HEART}"
 twitter_button_text = f"Twitter {emojis.FRONT_FACING_CHICK}"
 
 
-def message_title(course_link, course_title) -> str:
-    return f"[{emojis.TICKET}]({course_link}) _*Free Udemy Course:*_\n\n{course_title}"
+def message_title(title, link, rating, students) -> str:
+    message = (
+        f"[{emojis.BOOKS}]({link}) {title}",
+        f"{emojis.STAR} Rating: {rating}\/5",
+        f"{emojis.PEOPLE_SILHOUETTE} Students: {students}",
+        f"Subscribe for more free Udemy courses {emojis.HEART}",
+    )
+    return "\n\n".join(message)

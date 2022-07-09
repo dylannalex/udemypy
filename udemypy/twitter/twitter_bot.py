@@ -9,7 +9,11 @@ def _connect() -> API:
 
 
 def _tweet_course(api, course) -> None:
-    api.update_status(status=messages.get_tweet(course["title"], course["link"]))
+    api.update_status(
+        status=messages.get_tweet(
+            course["title"], course["link"], course["rating"], course["students"]
+        )
+    )
 
 
 def send_courses(courses) -> None:
