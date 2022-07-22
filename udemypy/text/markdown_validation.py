@@ -1,4 +1,4 @@
-# Telegram Special Characters
+# Markdown special characters
 SPECIAL_CHARS = (
     "_",
     "*",
