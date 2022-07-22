@@ -1,13 +1,15 @@
 import telegram
 from telegram.ext import Updater
-from telegram import InlineKeyboardMarkup, InlineKeyboardButton
+from telegram import InlineKeyboardMarkup
+from telegram import InlineKeyboardButton
 from telegram.ext.dispatcher import Dispatcher
 from udemypy.text import markdown_validation
-from udemypy.tgm import data, messages
+from udemypy.tgm import settings
+from udemypy.tgm import messages
 
 
 def _connect() -> Dispatcher:
-    bot = telegram.Bot(token=data.TOKEN)
+    bot = telegram.Bot(token=settings.TOKEN)
     updater = Updater(bot.token, use_context=True)
     return updater.dispatcher
 
@@ -23,17 +25,17 @@ def _send_course(dispatcher, course) -> None:
     )
 
     share_button = InlineKeyboardButton(
-        text=messages.share_button_text, url=data.CHANNEL_LINK
+        text=messages.share_button_text, url=settings.CHANNEL_LINK
     )
 
     twitter_button = InlineKeyboardButton(
-        text=messages.twitter_button_text, url=data.TWITTER_LINK
+        text=messages.twitter_button_text, url=settings.TWITTER_LINK
     )
 
     dispatcher.bot.sendMessage(
         parse_mode="MarkdownV2",
         text=messages.message_title(title, link, rating, students),
-        chat_id=data.CHANNEL_ID,
+        chat_id=settings.CHANNEL_ID,
         reply_markup=InlineKeyboardMarkup(
             [[get_course_button], [share_button, twitter_button]]
         ),
@@ -52,7 +54,7 @@ def send_message(message, buttons=None, disable_web_page_preview=True) -> None:
         dispatcher.bot.sendMessage(
             parse_mode="MarkdownV2",
             text=message,
-            chat_id=data.CHANNEL_ID,
+            chat_id=settings.CHANNEL_ID,
             reply_markup=InlineKeyboardMarkup(buttons),
             disable_web_page_preview=disable_web_page_preview,
         )
@@ -60,6 +62,6 @@ def send_message(message, buttons=None, disable_web_page_preview=True) -> None:
         dispatcher.bot.sendMessage(
             parse_mode="MarkdownV2",
             text=message,
-            chat_id=data.CHANNEL_ID,
+            chat_id=settings.CHANNEL_ID,
             disable_web_page_preview=disable_web_page_preview,
         )

@@ -1,10 +1,12 @@
-from tweepy import OAuthHandler, API
-from udemypy.twitter import data, messages
+from tweepy import API
+from tweepy import OAuthHandler
+from udemypy.twitter import settings
+from udemypy.twitter import messages
 
 
 def _connect() -> API:
-    auth = OAuthHandler(data.API_KEY, data.API_KEY_SECRET)
-    auth.set_access_token(data.ACCESS_TOKEN, data.ACCESS_TOKEN_SECRET)
+    auth = OAuthHandler(settings.API_KEY, settings.API_KEY_SECRET)
+    auth.set_access_token(settings.ACCESS_TOKEN, settings.ACCESS_TOKEN_SECRET)
     return API(auth)
 
 

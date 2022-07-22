@@ -1,6 +1,6 @@
 import mysql.connector
 from urllib.parse import urlparse
-from udemypy.database.db_data import CLEARDB_DATABASE_URL
+from udemypy.database.settings import CLEARDB_DATABASE_URL
 
 
 def connect_to_database():

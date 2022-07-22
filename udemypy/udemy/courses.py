@@ -1,5 +1,5 @@
 from udemypy.udemy import scraper
-from udemypy.udemy.bot_settings import PAGES_TO_SCRAPE
+from udemypy.udemy.settings import PAGES_TO_SCRAPE
 
 
 def _scrape_courses(pages: int) -> list[dict]:
