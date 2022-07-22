@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import datetime
 from udemypy.database import connection, db_management
 from udemypy.database.db_data import COURSE_LIFETIME
 
