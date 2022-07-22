@@ -1,5 +1,6 @@
 from udemypy.udemy import courses
-from udemypy.database import connection, db_management
+from udemypy.database import connection
+from udemypy.database import database
 from udemypy.send_courses import send_courses
 
 
@@ -9,7 +10,7 @@ def main() -> None:
 
     # Add courses to database
     db = connection.connect_to_database()
-    courses_added = db_management.add_courses(db, courses_found)
+    courses_added = database.add_courses(db, courses_found)
 
     # Send courses
     send_courses(courses_added)

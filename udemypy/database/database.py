@@ -1,4 +1,4 @@
-from udemypy.database.db_data import TABLE_NAME
+from udemypy.database.settings import TABLE_NAME
 
 
 def add_courses(db, courses) -> list:

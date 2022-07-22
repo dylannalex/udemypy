@@ -30,12 +30,12 @@ Finally, the `courses_added` list is shared on social media.
 
 ## :electric_plug: Enviroment Variables
 
-#### FILE: udemypy/udemy/bot_settings.py
+#### FILE: udemypy/udemy/settings.py
 
 ```
 PAGES_TO_SCRAPE: number of pages to scrape from Discudemy, UdemyFreebies and TutorialBar.
 ```
-#### FILE: udemypy/database/db_data.py
+#### FILE: udemypy/database/settings.py
 
 ```
 CLEARDB_DATABASE_URL: url provided by Heroku ClearDB.
@@ -43,7 +43,7 @@ COURSE_LIFETIME: days a course will be stored in the database.
 TABLE_NAME: name of the table where courses are stored.
 ```
 
-#### FILE: udemypy/tgm/data.py
+#### FILE: udemypy/tgm/settings.py
 
 ```
 TOKEN: token to establish connection with the Telegram API.
@@ -53,7 +53,7 @@ DONATE_ME_LINK: link shown when you click the donate button from a Telegram mess
 TWITTER_LINK: link shown when you click the twitter button from a Telegram message sent by UdemyPy.
 ```
 
-#### FILE: udemypy/twitter/data.py
+#### FILE: udemypy/twitter/settings.py
 
 ```
 API_KEY: key provided by Twitter to use its API.

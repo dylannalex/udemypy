@@ -1,6 +1,7 @@
-from datetime import date, datetime
-from udemypy.database import connection, db_management
-from udemypy.database.db_data import COURSE_LIFETIME
+from datetime import datetime
+from udemypy.database import connection
+from udemypy.database import database
+from udemypy.database.settings import COURSE_LIFETIME
 
 
 def get_old_courses(courses) -> list:
@@ -19,9 +20,9 @@ def get_old_courses(courses) -> list:
 
 def main():
     db = connection.connect_to_database()
-    courses = db_management.retrieve_courses(db.cursor())
+    courses = database.retrieve_courses(db.cursor())
     old_courses = get_old_courses(courses)
-    db_management.remove_courses(db, old_courses)
+    database.remove_courses(db, old_courses)
 
 
 if __name__ == "__main__":
