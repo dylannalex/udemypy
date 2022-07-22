@@ -1,17 +1,17 @@
-from udemypy.udemy import scrapers
+from udemypy.udemy import scraper
 from udemypy.udemy.bot_settings import PAGES_TO_SCRAPE
 
 
 def _scrape_courses(pages: int) -> list[dict]:
     courses_scrapers = (
-        scrapers.DiscudemyScraper(pages),
-        scrapers.UdemyFreebiesScraper(pages),
-        scrapers.TutorialBarScraper(pages),
+        scraper.DiscudemyScraper(pages),
+        scraper.UdemyFreebiesScraper(pages),
+        scraper.TutorialBarScraper(pages),
     )
     scraped_courses = []
-    for scraper in courses_scrapers:
-        scraper.find_courses()
-        scraped_courses.extend(scraper.courses)
+    for courses_scraper in courses_scrapers:
+        courses_scraper.find_courses()
+        scraped_courses.extend(courses_scraper.courses)
 
     return scraped_courses
 
@@ -23,12 +23,12 @@ def _delete_duplicates(courses: list[dict]) -> list[dict]:
 def _add_course_stats(courses: list[dict]) -> list[dict]:
     courses_with_stats = []
     for course in courses:
-        udemy_scraper = scrapers.UdemyScraper(course["link"])
+        stats_scraper = scraper.StatsScraper(course["link"])
         courses_with_stats.append(
             {
                 **course,
-                "rating": udemy_scraper.get_rating(),
-                "students": udemy_scraper.get_students(),
+                "rating": stats_scraper.get_rating(),
+                "students": stats_scraper.get_students(),
             }
         )
     return courses_with_stats

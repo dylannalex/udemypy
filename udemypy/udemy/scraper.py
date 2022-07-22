@@ -9,12 +9,13 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
 """
-Courses scrapers:
-Scrape Udemy courses links from a free courses website.
+_CoursesScraper:
+
+Scrapes Udemy courses links from a free courses website.
 """
 
 
-class CoursesScraper(ABC):
+class _CoursesScraper(ABC):
 
     HEAD = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36",
@@ -46,7 +47,7 @@ class CoursesScraper(ABC):
             self.courses.append({"title": title, "link": link, "date": self.date})
 
 
-class DiscudemyScraper(CoursesScraper):
+class DiscudemyScraper(_CoursesScraper):
     def __init__(self, pages):
         super().__init__()
         website = "https://www.discudemy.com/all/"
@@ -72,7 +73,7 @@ class DiscudemyScraper(CoursesScraper):
             self._add_course(title, link)
 
 
-class UdemyFreebiesScraper(CoursesScraper):
+class UdemyFreebiesScraper(_CoursesScraper):
     def __init__(self, pages):
         super().__init__()
         website = "https://www.udemyfreebies.com/free-udemy-courses/"
@@ -90,7 +91,7 @@ class UdemyFreebiesScraper(CoursesScraper):
             self._add_course(title, link)
 
 
-class TutorialBarScraper(CoursesScraper):
+class TutorialBarScraper(_CoursesScraper):
     def __init__(self, pages):
         super().__init__()
         website = "https://www.tutorialbar.com/all-courses/page/"
@@ -112,12 +113,12 @@ class TutorialBarScraper(CoursesScraper):
 
 
 """
-Udemy scraper:
+StatsScraper:
 Scrape Udemy course statistics (rating, students, etc).
 """
 
 
-class UdemyScraper:
+class StatsScraper:
     def __init__(self, course_link: str):
         r = requests.get(course_link)
         self.soup = bs(r.content, "html5lib")
