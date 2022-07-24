@@ -1,5 +1,10 @@
 from udemypy.udemy import scraper
+from udemypy.udemy import course
 from udemypy.udemy import settings
+
+
+def _delete_duplicated_courses(courses: list[dict]) -> list[dict]:
+    return [dict(t) for t in {tuple(course.items()) for course in courses}]
 
 
 def _scrape_courses(pages: int) -> list[dict]:
@@ -12,50 +17,65 @@ def _scrape_courses(pages: int) -> list[dict]:
     for courses_scraper in courses_scrapers:
         courses_scraper.find_courses()
         scraped_courses.extend(courses_scraper.courses)
+    return _delete_duplicated_courses(scraped_courses)
 
-    return scraped_courses
 
-
-def _delete_duplicated_courses(courses: list[dict]) -> list[dict]:
-    return [dict(t) for t in {tuple(course.items()) for course in courses}]
+def _parse_courses(courses: list[dict]) -> list[course.Course]:
+    parsed_courses = []
+    for course_ in courses:
+        parsed_courses.append(
+            course.Course(
+                int(course_["id"]),
+                course_["title"],
+                course_["link"],
+                course_["coupon_code"],
+                course_["date_found"],
+            )
+        )
+    return parsed_courses
 
 
 def _delete_shared_courses(
-    courses: list[dict], shared_courses_titles: list[str]
-) -> list[dict]:
-    for course in courses:
-        if course["title"] not in shared_courses_titles:
-            print("this course is new:", course["link"])
-    input("Waiting")
-    # return [
-    #     course for course in courses if course["title"] not in shared_courses_titles
-    # ]
+    courses: list[course.Course], shared_courses_id: list[int]
+) -> list[course.Course]:
+    return [c for c in courses if c.id not in shared_courses_id]
 
 
-def _add_course_stats(courses: list[dict]) -> list[dict]:
+def new_courses(shared_courses_id: list[int]) -> list[dict]:
+    """
+    Find free Udemy courses, deletes already shared
+    courses and returns them with their stats added.
+    """
+    scraped_courses = _parse_courses(_scrape_courses(settings.PAGES_TO_SCRAPE))
+    return _delete_shared_courses(scraped_courses, shared_courses_id)
+
+
+def add_courses_stats(courses: list[course.Course]) -> list[course.CourseWithStats]:
     courses_with_stats = []
     stats_scraper = scraper.StatsScraper(
         settings.CHROMEDRIVER_PATH,
         settings.GOOGLE_CHROME_BIN,
         settings.PAGE_LOAD_TIME,
     )
-    for course in courses:
+
+    # Find stats
+    for course_ in courses:
         try:
-            stats = stats_scraper.get_stats(course["link"])
+            stats = stats_scraper.get_stats(course_.link)
         except AttributeError:
             continue
-        courses_with_stats.append(course | stats)
+
+        # Create CourseWithStats instance
+        courses_with_stats.append(
+            course.CourseWithStats(
+                course_.id,
+                course_.title,
+                course_.link,
+                course_.coupon_code,
+                course_.date_found,
+                stats["students"],
+                stats["rating"],
+            )
+        )
 
     return courses_with_stats
-
-
-def get_new_courses(shared_courses_titles: list[str]) -> list[dict]:
-    """
-    Find free Udemy courses, deletes duplicated and already shared
-    courses and returns them with their stats added.
-    """
-    courses = _scrape_courses(settings.PAGES_TO_SCRAPE)
-    unduplicated_courses = _delete_duplicated_courses(courses)
-    new_courses = _delete_shared_courses(unduplicated_courses, shared_courses_titles)
-    print("New courses:", new_courses)
-    return _add_course_stats(new_courses)
