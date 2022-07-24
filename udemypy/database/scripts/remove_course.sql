@@ -1,0 +1,1 @@
+DELETE FROM course WHERE id=id_value;
