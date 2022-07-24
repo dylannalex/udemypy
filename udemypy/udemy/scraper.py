@@ -44,10 +44,33 @@ class _CoursesScraper(ABC):
 
         return all
 
+    def _get_course_id(self, course_link):
+        r = requests.get(course_link, headers=self.HEAD, verify=False)
+        soup = bs(r.content, "html5lib")
+        rating = soup.find("body", id="udemy")
+        return rating["data-clp-course-id"]
+
     def _add_course(self, title, link) -> None:
-        if not any(d["link"] == link for d in self.courses):
-            # link is not repeated
-            self.courses.append({"title": title, "link": link, "date": self.date})
+        if any(d["link"] == link for d in self.courses):
+            # link is repeated
+            return
+        try:
+            course_id = self._get_course_id(link)
+        except TypeError:
+            # Could not find course id
+            return
+        link_list = link.split("/?")
+        course_link = f"{link_list[0]}/"
+        coupon_code = link_list[1].split("=")[1]
+        self.courses.append(
+            {
+                "id": course_id,
+                "title": title,
+                "link": course_link,
+                "coupon_code": coupon_code,
+                "date_found": self.date,
+            }
+        )
 
 
 class DiscudemyScraper(_CoursesScraper):
