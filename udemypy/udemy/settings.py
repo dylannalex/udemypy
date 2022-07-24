@@ -1,3 +1,6 @@
 from os import getenv
 
 PAGES_TO_SCRAPE = int(getenv("PAGES_TO_SCRAPE"))
+CHROMEDRIVER_PATH = getenv("CHROMEDRIVER_PATH")
+GOOGLE_CHROME_BIN = getenv("GOOGLE_CHROME_BIN")
+PAGE_LOAD_TIME = int(getenv("PAGE_LOAD_TIME"))

@@ -1,9 +1,12 @@
-from abc import ABC, abstractmethod
-from datetime import datetime
-from bs4 import BeautifulSoup as bs
 import urllib3
 import requests
-
+from selenium import webdriver
+from selenium_stealth import stealth
+from bs4 import BeautifulSoup as bs
+from abc import ABC
+from abc import abstractmethod
+from datetime import datetime
+from time import sleep
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -119,17 +122,57 @@ Scrape Udemy course statistics (rating, students, etc).
 
 
 class StatsScraper:
-    def __init__(self, course_link: str):
-        r = requests.get(course_link)
-        self.soup = bs(r.content, "html5lib")
-        self.course_link = course_link
 
-    def get_rating(self):
-        rating = self.soup.find(
+    SLEATH_SETTINGS = {
+        "languages": ["en-US", "en"],
+        "vendor": "Google Inc.",
+        "platform": "Win32",
+        "webgl_vendor": "Intel Inc.",
+        "renderer": "Intel Iris OpenGL Engine",
+        "fix_hairline": True,
+    }
+
+    def __init__(
+        self, chromedriver_path: str, google_chrome_bin: str, page_load_time: int
+    ):
+        options = webdriver.ChromeOptions()
+        options.add_argument("start-maximized")
+        options.add_argument("log-level=3")
+        options.add_argument("--headless")
+        options.add_argument("--disable-dev-shm-usage")
+        options.add_argument("--no-sandbox")
+        options.add_experimental_option("excludeSwitches", ["enable-automation"])
+        options.add_experimental_option("useAutomationExtension", False)
+        if google_chrome_bin:
+            options.binary_location = google_chrome_bin
+        self.driver = webdriver.Chrome(
+            options=options, executable_path=chromedriver_path
+        )
+        stealth(
+            self.driver,
+            languages=StatsScraper.SLEATH_SETTINGS["languages"],
+            vendor=StatsScraper.SLEATH_SETTINGS["vendor"],
+            platform=StatsScraper.SLEATH_SETTINGS["platform"],
+            webgl_vendor=StatsScraper.SLEATH_SETTINGS["webgl_vendor"],
+            renderer=StatsScraper.SLEATH_SETTINGS["renderer"],
+            fix_hairline=StatsScraper.SLEATH_SETTINGS["fix_hairline"],
+        )
+        self.page_load_time = page_load_time
+
+    def get_stats(self, course_link: str):
+        self.driver.get(course_link)
+        sleep(self.page_load_time)
+        soup = bs(self.driver.page_source, "html5lib")
+        rating = self._get_rating(soup)
+        students = self._get_students(soup)
+        return {"rating": rating, "students": students}
+
+    def _get_rating(self, soup):
+        rating = soup.find(
             "span", class_="udlite-heading-sm star-rating--rating-number--2o8YM"
         )
         return rating.text
 
-    def get_students(self):
-        students = self.soup.find("div", class_="enrollment")
+    def _get_students(self, soup):
+        students = soup.find("div", class_="enrollment")
         return students.text.split(" ")[0]
