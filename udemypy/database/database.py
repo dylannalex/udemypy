@@ -49,6 +49,7 @@ def execute_script(
     cursor = db.cursor()
     for command in sql_commands:
         cursor.execute(command)
+
     # Save modifications on database (if any)
     try:
         db.commit()
@@ -56,7 +57,11 @@ def execute_script(
         # No modifications
         pass
 
-    return cursor
+    # Save cursor output and close it
+    cursor_output = [output for output in cursor]
+    cursor.close()
+
+    return cursor_output
 
 
 def add_course(
