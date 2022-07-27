@@ -36,26 +36,15 @@ def database_access(function: Callable):
 def execute_script(
     db: MySQLConnection, filename: str, variables: dict = None
 ) -> MySQLCursor:
-    # Open and read the file as a single buffer
-    fd = open(filename, "r")
-    sql_script = fd.read()
-    fd.close()
-
-    # Replace variables with their values
-    sql_script = script.set_variables_value(sql_script, variables)
-
-    # Run commands in sql file
-    sql_commands = sql_script.split(";")
+    sql_commands = script.read_script(filename, variables)
     cursor = db.cursor()
+
+    # Execute commands
     for command in sql_commands:
         cursor.execute(command)
-
-    # Save modifications on database (if any)
-    try:
-        db.commit()
-    except InternalError:
-        # No modifications
-        pass
+        # Save modifications on database (if any)
+        if script.modifies_database_state(command):
+            db.commit()
 
     # Save cursor output and close it
     cursor_output = [output for output in cursor]
