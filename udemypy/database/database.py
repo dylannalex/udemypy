@@ -1,9 +1,12 @@
 import mysql.connector
 from urllib.parse import urlparse
 from udemypy.database import settings
+from udemypy.database import script
 
 from mysql.connector.connection import MySQLConnection
+from mysql.connector.connection import MySQLCursor
 from mysql.connector.errors import OperationalError
+from mysql.connector.errors import InternalError
 from typing import Callable
 
 
@@ -30,42 +33,56 @@ def database_access(function: Callable):
 
 
 @database_access
-def add_courses(db: MySQLConnection, courses: dict) -> list:
+def execute_script(
+    db: MySQLConnection, filename: str, variables: dict = None
+) -> MySQLCursor:
+    sql_commands = script.read_script(filename, variables)
     cursor = db.cursor()
-    courses_added = []
-    for course in courses:
-        print(f'COURSE: {course["title"]}')
-        try:
-            cursor.execute(
-                f"""INSERT INTO {settings.TABLE_NAME} VALUES('{course['title']}', '{course['link']}', '{course['date']}');"""
-            )
-            print("SUCCESSFULLY ADDED\n")
-            courses_added.append(course)
 
-        except Exception as exception:
-            print(f"FAILED - {exception}\n")
+    # Execute commands
+    for command in sql_commands:
+        cursor.execute(command)
+        # Save modifications on database (if any)
+        if script.modifies_database_state(command):
+            db.commit()
 
-    db.commit()
-    return courses_added
+    # Save cursor output and close it
+    cursor_output = [output for output in cursor]
+    cursor.close()
+
+    return cursor_output
 
 
-@database_access
+def add_course(
+    db: MySQLConnection,
+    course_id: int,
+    course_title: str,
+    course_link: str,
+    course_coupon: str,
+    date_found: str,
+) -> list:
+    script_path = script.get_path("add_course.sql")
+    variables = {
+        "id_value": course_id,
+        "title_value": course_title,
+        "link_value": course_link,
+        "coupon_code_value": course_coupon,
+        "date_found_value": date_found,
+    }
+    execute_script(db, script_path, variables)
+
+
 def retrieve_courses(db: MySQLConnection) -> list[dict]:
-    cursor = db.cursor()
-    cursor.execute(f"SELECT * FROM {settings.TABLE_NAME}")
-    courses_added = []
-    for row in cursor:
-        courses_added.append(
-            {"title": row[0], "link": row[1], "date": row[2].strftime("%Y-%m-%d")}
-        )
-    return courses_added
+    from udemypy.udemy import course
+
+    script_path = script.get_path("retrieve_courses.sql")
+    courses = []
+    for course_values in execute_script(db, script_path):
+        courses.append(course.Course(*course_values))
+    return courses
 
 
-@database_access
-def remove_courses(db: MySQLConnection, courses: dict) -> None:
-    cursor = db.cursor()
-    for course in courses:
-        cursor.execute(
-            f"""DELETE FROM {settings.TABLE_NAME} WHERE title='{course['title']}';"""
-        )
-    db.commit()
+def remove_course(db: MySQLConnection, course_id: int) -> None:
+    script_path = script.get_path("remove_course.sql")
+    variables = {"id_value": course_id}
+    execute_script(db, script_path, variables)
