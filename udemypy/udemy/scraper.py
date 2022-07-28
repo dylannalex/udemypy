@@ -189,12 +189,16 @@ class StatsScraper:
         soup = bs(self.driver.page_source, "html5lib")
         # Get stats
         discount = self._get_discount(soup)
+        discount_time_left = self._get_discount_time_left(soup)
         rating = self._get_rating(soup)
         students = self._get_students(soup)
+        language = self._get_language(soup)
         return {
             "discount": discount,
+            "discount_time_left": discount_time_left,
             "rating": rating,
             "students": students,
+            "language": language,
         }
 
     def _get_discount(self, soup):
@@ -203,7 +207,14 @@ class StatsScraper:
             class_="price-text--price-part--2npPm udlite-clp-percent-discount udlite-text-sm",
         )
         discount_percentage = re.findall("[0-9]+", discount.text)[0]
-        return discount_percentage
+        return int(discount_percentage)
+
+    def _get_discount_time_left(self, soup):
+        discount_time_left = soup.find(
+            "div",
+            class_="discount-expiration--discount-expiration--2cPY2",
+        )
+        return discount_time_left.text.split("left")[0]
 
     def _get_rating(self, soup):
         rating = soup.find(
@@ -214,3 +225,10 @@ class StatsScraper:
     def _get_students(self, soup):
         students = soup.find("div", class_="enrollment")
         return students.text.split(" ")[0]
+
+    def _get_language(self, soup):
+        language = soup.find(
+            "div",
+            class_="clp-lead__element-item clp-lead__locale",
+        )
+        return language.text

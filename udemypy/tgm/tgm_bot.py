@@ -15,7 +15,13 @@ def connect() -> Dispatcher:
 
 
 def send_course(
-    dispatcher, course_link, course_title, course_rating, course_students
+    dispatcher,
+    course_link,
+    course_title,
+    course_rating,
+    course_students,
+    course_language,
+    course_discount_time_left,
 ) -> None:
     course_title = markdown_validation.get_valid_text(course_title)
     course_rating = markdown_validation.get_valid_text(course_rating)
@@ -36,7 +42,12 @@ def send_course(
     dispatcher.bot.sendMessage(
         parse_mode="MarkdownV2",
         text=messages.message_title(
-            course_title, course_link, course_rating, course_students
+            course_title,
+            course_link,
+            course_rating,
+            course_students,
+            course_language,
+            course_discount_time_left,
         ),
         chat_id=settings.CHANNEL_ID,
         reply_markup=InlineKeyboardMarkup(

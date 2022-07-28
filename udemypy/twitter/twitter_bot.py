@@ -11,10 +11,21 @@ def connect() -> API:
 
 
 def tweet_course(
-    api, course_link, course_title, course_rating, course_students
+    api,
+    course_link,
+    course_title,
+    course_rating,
+    course_students,
+    course_language,
+    course_discount_time_left,
 ) -> None:
     api.update_status(
         status=messages.get_tweet(
-            course_title, course_link, course_rating, course_students
+            course_title,
+            course_link,
+            course_rating,
+            course_students,
+            course_language,
+            course_discount_time_left,
         )
     )

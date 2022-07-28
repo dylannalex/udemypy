@@ -73,8 +73,10 @@ def add_courses_stats(courses: list[course.Course]) -> list[course.CourseWithSta
                 course_.coupon_code,
                 course_.date_found,
                 discount=stats["discount"],
+                discount_time_left=stats["discount_time_left"],
                 students=stats["students"],
                 rating=stats["rating"],
+                language=stats["language"],
             )
         )
 

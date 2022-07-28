@@ -34,16 +34,22 @@ class CourseWithStats(Course):
         coupon_code: str,
         date_found: datetime,
         discount: int,
+        discount_time_left: str,
         students: str,
         rating: str,
+        language: str,
     ):
         """
         Attributes:
             @discount: discount percentage (1 to 100)
+            @discount_time_left: discount time left (hours or days)
             @students: number of students enrolled to the course
             @rating: course rating (from 0 to 5). It's a str value since it needs to be precise
+            @language: course language
         """
         super().__init__(id, title, link, coupon_code, date_found)
         self.discount = discount
+        self.discount_time_left = discount_time_left
         self.students = students
         self.rating = rating
+        self.language = language
