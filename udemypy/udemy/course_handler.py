@@ -77,6 +77,7 @@ def add_courses_stats(courses: list[course.Course]) -> list[course.CourseWithSta
                 students=stats["students"],
                 rating=stats["rating"],
                 language=stats["language"],
+                badge=stats["badge"],
             )
         )
 

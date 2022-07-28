@@ -22,6 +22,7 @@ def send_course(
     course_students,
     course_language,
     course_discount_time_left,
+    badge,
 ) -> None:
     course_title = markdown_validation.get_valid_text(course_title)
     course_rating = markdown_validation.get_valid_text(course_rating)
@@ -48,6 +49,7 @@ def send_course(
             course_students,
             course_language,
             course_discount_time_left,
+            badge,
         ),
         chat_id=settings.CHANNEL_ID,
         reply_markup=InlineKeyboardMarkup(

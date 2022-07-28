@@ -193,12 +193,14 @@ class StatsScraper:
         rating = self._get_rating(soup)
         students = self._get_students(soup)
         language = self._get_language(soup)
+        badge = self._get_badge(soup)
         return {
             "discount": discount,
             "discount_time_left": discount_time_left,
             "rating": rating,
             "students": students,
             "language": language,
+            "badge": badge,
         }
 
     def _get_discount(self, soup):
@@ -232,3 +234,12 @@ class StatsScraper:
             class_="clp-lead__element-item clp-lead__locale",
         )
         return language.text
+
+    def _get_badge(self, soup):
+        badge = soup.find(
+            "div",
+            class_=re.compile("udlite-badge udlite-heading-xs.*"),
+        )
+        if not badge:
+            return None
+        return badge.text

@@ -24,6 +24,7 @@ def _send_courses(courses: list[course.CourseWithStats]):
                 course.students,
                 course.language,
                 course.discount_time_left,
+                course.badge,
             )
         except Exception as exception:
             print(f"Could not send course to Telegram\nERROR:{exception}")
@@ -38,6 +39,7 @@ def _send_courses(courses: list[course.CourseWithStats]):
                 course.students,
                 course.language,
                 course.discount_time_left,
+                course.badge,
             )
         except Exception as exception:
             print(f"Could not send course to Twitter\nERROR:{exception}")

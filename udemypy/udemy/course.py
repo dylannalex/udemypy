@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Union
 
 
 class Course:
@@ -38,6 +39,7 @@ class CourseWithStats(Course):
         students: str,
         rating: str,
         language: str,
+        badge: Union[str, None],
     ):
         """
         Attributes:
@@ -46,6 +48,7 @@ class CourseWithStats(Course):
             @students: number of students enrolled to the course
             @rating: course rating (from 0 to 5). It's a str value since it needs to be precise
             @language: course language
+            @badge: course badge (Bestseller, Highest rated, etc)
         """
         super().__init__(id, title, link, coupon_code, date_found)
         self.discount = discount
@@ -53,3 +56,4 @@ class CourseWithStats(Course):
         self.students = students
         self.rating = rating
         self.language = language
+        self.badge = badge

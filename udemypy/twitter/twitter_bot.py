@@ -18,6 +18,7 @@ def tweet_course(
     course_students,
     course_language,
     course_discount_time_left,
+    badge,
 ) -> None:
     api.update_status(
         status=messages.get_tweet(
@@ -27,5 +28,6 @@ def tweet_course(
             course_students,
             course_language,
             course_discount_time_left,
+            badge,
         )
     )
