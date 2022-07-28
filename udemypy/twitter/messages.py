@@ -6,17 +6,17 @@ def get_tweet(
 ) -> str:
     tweet = [
         f"{emojis.BOOKS} {title}",
-        f"{emojis.LINK}Link: {link}",
-        f"{emojis.STAR}Rating: {rating}/5",
-        f"{emojis.PEOPLE_SILHOUETTE}Students: {students}",
-        f"{emojis.GLOBE}Language: {language}",
-        f"{emojis.HOURGLASS}Time left: {discount_time_left}",
+        f"{emojis.STAR}{rating}/5",
+        f"{emojis.PEOPLE_SILHOUETTE}{students} students",
+        f"{emojis.GLOBE}{language}",
+        f"{emojis.HOURGLASS}Free for {discount_time_left}",
         f"Follow me for more free Udemy courses {emojis.HEART}",
+        f"{emojis.LINK}{link}",
     ]
 
     # Add course badge (if any)
-    _badge_index = 2
+    _badge_index = 1
     if badge:
-        tweet.insert(_badge_index, f"{emojis.TROPHY}Badge: {badge}")
+        tweet.insert(_badge_index, f"{emojis.TROPHY}{badge}")
 
     return "\n\n".join(tweet)
