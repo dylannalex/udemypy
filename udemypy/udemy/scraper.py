@@ -1,3 +1,4 @@
+import re
 import urllib3
 import requests
 from selenium import webdriver
@@ -186,9 +187,23 @@ class StatsScraper:
         self.driver.get(course_link)
         sleep(self.page_load_time)
         soup = bs(self.driver.page_source, "html5lib")
+        # Get stats
+        discount = self._get_discount(soup)
         rating = self._get_rating(soup)
         students = self._get_students(soup)
-        return {"rating": rating, "students": students}
+        return {
+            "discount": discount,
+            "rating": rating,
+            "students": students,
+        }
+
+    def _get_discount(self, soup):
+        discount = soup.find(
+            "div",
+            class_="price-text--price-part--2npPm udlite-clp-percent-discount udlite-text-sm",
+        )
+        discount_percentage = re.findall("[0-9]+", discount.text)[0]
+        return discount_percentage
 
     def _get_rating(self, soup):
         rating = soup.find(

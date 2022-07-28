@@ -57,11 +57,10 @@ def add_courses_stats(courses: list[course.Course]) -> list[course.CourseWithSta
         settings.GOOGLE_CHROME_BIN,
         settings.PAGE_LOAD_TIME,
     )
-
     # Find stats
     for course_ in courses:
         try:
-            stats = stats_scraper.get_stats(course_.link)
+            stats = stats_scraper.get_stats(course_.link_with_coupon)
         except AttributeError:
             continue
 
@@ -73,9 +72,20 @@ def add_courses_stats(courses: list[course.Course]) -> list[course.CourseWithSta
                 course_.link,
                 course_.coupon_code,
                 course_.date_found,
-                stats["students"],
-                stats["rating"],
+                discount=stats["discount"],
+                students=stats["students"],
+                rating=stats["rating"],
             )
         )
 
     return courses_with_stats
+
+
+def delete_non_free_courses(
+    courses: list[course.CourseWithStats],
+) -> list[course.CourseWithStats]:
+    """
+    Given a list of course.CourseWithStats, removes the courses
+    that are not free (those which discount is below 100%)
+    """
+    return [c for c in courses if c.discount == settings.FREE_COURSE_DISCOUNT]

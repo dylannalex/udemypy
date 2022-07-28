@@ -17,7 +17,11 @@ def _send_courses(courses: list[course.CourseWithStats]):
         # Send course to Telegram
         try:
             tgm_bot.send_course(
-                dispatcher, course.link, course.title, course.rating, course.students
+                dispatcher,
+                course.link_with_coupon,
+                course.title,
+                course.rating,
+                course.students,
             )
         except Exception as exception:
             print(f"Could not send course to Telegram\nERROR:{exception}")
@@ -25,7 +29,11 @@ def _send_courses(courses: list[course.CourseWithStats]):
         # Send course to Twitter
         try:
             twitter_bot.tweet_course(
-                api, course.link, course.title, course.rating, course.students
+                api,
+                course.link_with_coupon,
+                course.title,
+                course.rating,
+                course.students,
             )
         except Exception as exception:
             print(f"Could not send course to Twitter\nERROR:{exception}")
@@ -39,11 +47,13 @@ def main():
     shared_courses = database.retrieve_courses(db)
     shared_courses_id = [course_.id for course_ in shared_courses]
 
-    # Find new courses
+    # Find new free courses with their stats
     new_courses = course_handler.new_courses(shared_courses_id)
+    courses_with_stats = course_handler.add_courses_stats(new_courses)
+    free_courses = course_handler.delete_non_free_courses(courses_with_stats)
 
     # Add courses to database
-    for course_ in new_courses:
+    for course_ in free_courses:
         database.add_course(
             db,
             course_.id,
@@ -54,8 +64,7 @@ def main():
         )
 
     # Send courses
-    courses_with_stats = course_handler.add_courses_stats(new_courses[0:3])
-    _send_courses(courses_with_stats)
+    _send_courses(free_courses)
 
 
 if __name__ == "__main__":
