@@ -92,3 +92,13 @@ def delete_non_free_courses(
     that are not free (those which discount is below 100%)
     """
     return [c for c in courses if c.discount == settings.FREE_COURSE_DISCOUNT]
+
+
+def delete_free_courses(
+    courses: list[course.CourseWithStats],
+) -> list[course.CourseWithStats]:
+    """
+    Given a list of course.CourseWithStats, removes the courses
+    that are free (those which discount is 100%)
+    """
+    return [c for c in courses if c.discount < settings.FREE_COURSE_DISCOUNT]
