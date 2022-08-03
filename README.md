@@ -40,7 +40,10 @@ The best way you can contribute, is to share your enthusiasm about UdemyPy with
 other people. Talk about UdemyPy with your family and friends, and help this
 learning lovers community continue growing.
 
-You can also support me on Buy Me A Coffee. That would help me keep udemypy server
+If you are interested in contributing with UdemyPy development, check out
+the [Contributing Guide](CONTRIBUTING.md).
+
+You can also support me on Buy Me A Coffee. That would help me keep UdemyPy server
 up and running!
 
 [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/dylantinten)
