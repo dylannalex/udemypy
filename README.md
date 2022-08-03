@@ -1,63 +1,49 @@
-# UdemyPy :robot:	
-
 <p align="center">
-  <img width="200" height="200" src="../media/udemypy-logo.png?raw=true">
+  <img width="350" height="350" src="../media/udemypy-logo.png?raw=true">
 </p>
 
-**UdemyPy** is a bot that hourly searches for Udemy free courses and shares them on:
+UdemyPy is an open source bot that shares free Udemy courses on:
 - [Telegram](https://t.me/freecourses000)
 - [Twitter](https://twitter.com/UdemyPy)
 
+This project aims to make learning free for everybody. To achieve this, UdemyPy
+looks for Udemy courses with a **100% discount** and shares them on social media,
+so they become accessible for everyone.
+
+
+## :electric_plug: Why follow UdemyPy?
+
+- ***It's totally free***. You only need to create a Udemy account. You don't
+  need to add any payment method.
+- ***You can learn anything***. UdemyPy doesn't filter courses. You will find
+  courses on any category and language.
+- ***It's completely legal***. In fact, UdemyPy helps Udemy content creators
+  reach more audience.
 
 ## :electric_plug: How does it work?
 
-For publishing new courses, UdemyPy follows these steps:
+In order to increment their audience, content creators on Udemy can set a discount
+to their courses. UdemyPy looks for 100% discount coupons and shares them.  
 
-1. UdemyPy looks for courses at Discudemy, UdemyFreebies and TutorialBar.
-2. The courses found are compared to those previously found. A `new_courses` list is generated and stored into the database.
-3. `new_courses` are shared on social media.
+When looking for free courses shared by UdemyPy, remember to check the offer time
+left. Once it's expired, the course will no longer be free.
 
-This process is run hourly, everyday.
+Whenever you find a course you like, click on the link and enroll in it. Despite
+the fact that courses are free only for a limited amount of time, once you are
+enrolled ***they will be yours forever!***
 
-## :electric_plug: How are repeated courses detected?
+## :electric_plug: How can I contribute with the project?
 
-Since UdemyPy scrapes different websites constantly, it must remember which courses have already been shared.<br/>
-Every hour UdemyPy gets a list of free Udemy courses: `courses_found`. This list contains courses which haven't been shared
-yet and courses that have. For each course in `courses_found`, UdemyPy tries to add it to the database. If it fails, the course
-is already in the database (therefore the course has already been shared). If it success, the course is stored in a `courses_added`
-list.<br/>
-Finally, the `courses_added` list is shared on social media.
+Thank you for your interest in contributing to UdemyPy:heart:
 
-## :electric_plug: Enviroment Variables
+The best way you can contribute, is to share your enthusiasm about UdemyPy with
+other people. Talk about UdemyPy with your family and friends, and help this
+learning lovers community continue growing.
 
-#### FILE: udemypy/udemy/settings.py
+If you are interested in contributing with UdemyPy development, check out
+the [Contributing Guide](CONTRIBUTING.md).
 
-```
-PAGES_TO_SCRAPE: number of pages to scrape from Discudemy, UdemyFreebies and TutorialBar.
-```
-#### FILE: udemypy/database/settings.py
+You can also support me on Buy Me A Coffee. That would help me keep UdemyPy server
+up and running!
 
-```
-CLEARDB_DATABASE_URL: url provided by Heroku ClearDB.
-COURSE_LIFETIME: days a course will be stored in the database.
-TABLE_NAME: name of the table where courses are stored.
-```
-
-#### FILE: udemypy/tgm/settings.py
-
-```
-TOKEN: token to establish connection with the Telegram API.
-CHANNEL_ID: Telegram channel id (could be a number or string).
-CHANNEL_LINK: link shown when you click the share button from a Telegram message sent by UdemyPy.
-DONATE_ME_LINK: link shown when you click the donate button from a Telegram message sent by UdemyPy.
-TWITTER_LINK: link shown when you click the twitter button from a Telegram message sent by UdemyPy.
-```
-
-#### FILE: udemypy/twitter/settings.py
-
-```
-API_KEY: key provided by Twitter to use its API.
-API_KEY_SECRET: key provided by Twitter to use its API.
-ACCESS_TOKEN: token provided by Twitter to use its API.
-ACCESS_TOKEN_SECRET: token provided by Twitter to use its API.
-```
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/dylantinten)
