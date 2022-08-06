@@ -7,7 +7,9 @@ share_button_text = f"Share channel {emojis.SPEAKING_HEAD}"
 
 donate_button_text = f"Donate me {emojis.HEART}"
 
-twitter_button_text = f"Twitter {emojis.FRONT_FACING_CHICK}"
+twitter_button_text = f"Free Courses on Twitter {emojis.FRONT_FACING_CHICK}"
+
+github_repo_text = f"GitHub Repo {emojis.HAPPY_CAT}"
 
 
 def message_title(

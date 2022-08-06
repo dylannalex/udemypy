@@ -40,6 +40,10 @@ def send_course(
         text=messages.twitter_button_text, url=settings.TWITTER_LINK
     )
 
+    github_button = InlineKeyboardButton(
+        text=messages.github_repo_text, url=settings.GITHUB_LINK
+    )
+
     dispatcher.bot.sendMessage(
         parse_mode="MarkdownV2",
         text=messages.message_title(
@@ -53,6 +57,6 @@ def send_course(
         ),
         chat_id=settings.CHANNEL_ID,
         reply_markup=InlineKeyboardMarkup(
-            [[get_course_button], [share_button, twitter_button]]
+            [[get_course_button], [share_button, github_button], [twitter_button]],
         ),
     )
