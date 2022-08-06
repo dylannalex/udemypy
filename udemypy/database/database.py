@@ -6,7 +6,6 @@ from udemypy.database import script
 from mysql.connector.connection import MySQLConnection
 from mysql.connector.connection import MySQLCursor
 from mysql.connector.errors import OperationalError
-from mysql.connector.errors import InternalError
 from typing import Callable
 
 
