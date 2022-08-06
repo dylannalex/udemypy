@@ -27,7 +27,7 @@ def _send_courses(courses: list[course.CourseWithStats]):
                 course.badge,
             )
         except Exception as exception:
-            print(f"Could not send course to Telegram\nERROR:{exception}")
+            print(f"Could not send course to Telegram\nERROR: {exception}")
 
         # Send course to Twitter
         try:
@@ -42,7 +42,24 @@ def _send_courses(courses: list[course.CourseWithStats]):
                 course.badge,
             )
         except Exception as exception:
-            print(f"Could not send course to Twitter\nERROR:{exception}")
+            print(f"Could not send course to Twitter\nERROR: {exception}")
+
+
+def _save_courses(db, courses: list[course.CourseWithStats]):
+    for course_ in courses:
+        try:
+            database.add_course(
+                db,
+                course_.id,
+                course_.title,
+                course_.link,
+                course_.coupon_code,
+                course_.date_found,
+            )
+        except Exception as exception:
+            print(
+                f"[Database] Could not save course {course_.title}\nERROR: {exception}"
+            )
 
 
 def main():
@@ -59,15 +76,7 @@ def main():
     free_courses = course_handler.delete_non_free_courses(courses_with_stats)
 
     # Add courses to database
-    for course_ in free_courses:
-        database.add_course(
-            db,
-            course_.id,
-            course_.title,
-            course_.link,
-            course_.coupon_code,
-            course_.date_found,
-        )
+    _save_courses(db, free_courses)
 
     # Send courses
     _send_courses(free_courses)
