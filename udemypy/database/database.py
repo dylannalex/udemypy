@@ -10,7 +10,7 @@ from typing import Callable
 
 
 def connect() -> MySQLConnection:
-    dbc = urlparse(settings.CLEARDB_DATABASE_URL)
+    dbc = urlparse(settings.DATABASE_URL)
     db = mysql.connector.connect(
         host=dbc.hostname,
         user=dbc.username,
