@@ -2,6 +2,7 @@ import mysql.connector
 from urllib.parse import urlparse
 from udemypy.database import settings
 from udemypy.database import script
+from udemypy import course
 
 from mysql.connector.connection import MySQLConnection
 from mysql.connector.connection import MySQLCursor
@@ -72,8 +73,6 @@ def add_course(
 
 
 def retrieve_courses(db: MySQLConnection) -> list[dict]:
-    from udemypy.udemy import course
-
     script_path = script.get_path("retrieve_courses.sql")
     courses = []
     for course_values in execute_script(db, script_path):

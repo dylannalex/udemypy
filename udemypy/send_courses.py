@@ -1,6 +1,6 @@
 from udemypy.tgm import tgm_bot
 from udemypy.twitter import twitter_bot
-from udemypy.udemy import course
+from udemypy import course
 from udemypy.udemy import course_handler
 from udemypy.database import database
 

@@ -1,5 +1,5 @@
 from udemypy.udemy import scraper
-from udemypy.udemy import course
+from udemypy import course
 from udemypy.udemy import settings
 
 

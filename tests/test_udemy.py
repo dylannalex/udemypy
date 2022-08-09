@@ -1,6 +1,6 @@
 from tests import _logs
 from udemypy.udemy import course_handler
-from udemypy.udemy import course
+from udemypy import course
 
 
 @_logs.test_function
