@@ -4,13 +4,10 @@ from udemypy.database import script
 from mysql.connector.connection import MySQLConnection
 
 
-def setup_tables(db: MySQLConnection):
-    database.execute_script(db, script.get_path("create_tables.sql"))
-
-
 def setup_database():
-    db = database.connect()
-    setup_tables(db)
+    db: MySQLConnection = database.connect()
+    database.execute_script(db, script.get_path("create_tables.sql"))
+    database.execute_script(db, script.get_path("setup_tables.sql"))
 
 
 if __name__ == "__main__":
