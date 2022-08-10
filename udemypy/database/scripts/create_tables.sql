@@ -22,7 +22,7 @@ CREATE TABLE social_media(
 );
 
 CREATE TABLE course_social_media(
-	id INT,
+	id INT AUTO_INCREMENT,
 	course_id INT,
     social_media_id INT,
     date_time_shared DATETIME NOT NULL,
