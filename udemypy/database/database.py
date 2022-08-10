@@ -60,7 +60,13 @@ def add_course(
     course_link: str,
     course_coupon: str,
     date_found: str,
-) -> list:
+    discount: int,
+    discount_time_left: str,
+    students: str,
+    rating: str,
+    language: str,
+    badge: str,
+) -> None:
     script_path = script.get_path("add_course.sql")
     variables = {
         "id_value": course_id,
@@ -68,6 +74,12 @@ def add_course(
         "link_value": course_link,
         "coupon_code_value": course_coupon,
         "date_found_value": date_found,
+        "discount_value": discount,
+        "discount_time_left_value": discount_time_left,
+        "students_value": students,
+        "rating_value": rating,
+        "lang_value": language,
+        "badge_value": badge,
     }
     execute_script(db, script_path, variables)
 
