@@ -32,7 +32,7 @@ class _CoursesScraper(ABC):
 
     def _get_all(self, pages, website, tags, class_=None):
         self.courses = []
-        self.date = datetime.today().strftime("%Y-%m-%d")
+        self.date = datetime.today()
         all = []
         for page in range(1, pages + 1):
             response = requests.get(f"{website}{page}", headers=self.HEAD, verify=False)
