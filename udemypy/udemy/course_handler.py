@@ -50,7 +50,7 @@ def new_courses(shared_courses_id: list[int]) -> list[dict]:
     return _delete_shared_courses(scraped_courses, shared_courses_id)
 
 
-def add_courses_stats(courses: list[course.Course]) -> list[course.CourseWithStats]:
+def add_courses_stats(courses: list[course.Course]) -> list[course.Course]:
     courses_with_stats = []
     stats_scraper = scraper.StatsScraper(
         settings.CHROMEDRIVER_PATH,
@@ -64,9 +64,9 @@ def add_courses_stats(courses: list[course.Course]) -> list[course.CourseWithSta
         except AttributeError:
             continue
 
-        # Create CourseWithStats instance
+        # Create Course instance with its stats added
         courses_with_stats.append(
-            course.CourseWithStats(
+            course.Course(
                 course_.id,
                 course_.title,
                 course_.link,
@@ -85,20 +85,20 @@ def add_courses_stats(courses: list[course.Course]) -> list[course.CourseWithSta
 
 
 def delete_non_free_courses(
-    courses: list[course.CourseWithStats],
-) -> list[course.CourseWithStats]:
+    courses: list[course.Course],
+) -> list[course.Course]:
     """
-    Given a list of course.CourseWithStats, removes the courses
+    Given a list of course.Course (with its stats), removes the courses
     that are not free (those which discount is below 100%)
     """
     return [c for c in courses if c.discount == settings.FREE_COURSE_DISCOUNT]
 
 
 def delete_free_courses(
-    courses: list[course.CourseWithStats],
-) -> list[course.CourseWithStats]:
+    courses: list[course.Course],
+) -> list[course.Course]:
     """
-    Given a list of course.CourseWithStats, removes the courses
+    Given a list of course.Course (with its stats), removes the courses
     that are free (those which discount is 100%)
     """
     return [c for c in courses if c.discount < settings.FREE_COURSE_DISCOUNT]
