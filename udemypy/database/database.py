@@ -41,11 +41,18 @@ def execute_script(
 
     # Execute commands
     for command in sql_commands:
-        cursor.execute(command)
-        # Save modifications on database (if any)
-        if script.modifies_database_state(command):
-            db.commit()
-
+        try:
+            cursor.execute(command)
+            # Save modifications on database (if any)
+            if script.modifies_database_state(command):
+                db.commit()
+        except Exception as exception:
+            print(
+                "[Database] Could not execute command",
+                f"Error: {exception}",
+                f"SQL command:\n{command}",
+                sep="\n",
+            )
     # Save cursor output and close it
     cursor_output = [output for output in cursor]
     cursor.close()
