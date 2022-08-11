@@ -49,6 +49,7 @@ def send_courses_to_telegram(db: MySQLConnection, courses: list[course.Course]):
                 f"Error: {exception}",
                 sep="\n",
             )
+            continue
         try:
             database.add_course_social_media(
                 db,
@@ -95,6 +96,7 @@ def send_courses_to_twitter(db: MySQLConnection, courses: list[course.Course]):
                 f"Error: {exception}",
                 sep="\n",
             )
+            continue
         try:
             database.add_course_social_media(
                 db,
