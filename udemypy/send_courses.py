@@ -1,86 +1,120 @@
+from udemypy import course
 from udemypy.tgm import tgm_bot
 from udemypy.twitter import twitter_bot
-from udemypy import course
-from udemypy.udemy import course_handler
 from udemypy.database import database
+from udemypy.database import settings as db_settings
+
+from datetime import datetime
+
+from mysql.connector.connection import MySQLConnection
+from typing import Callable, Any
 
 
-def _send_courses(courses: list[course.CourseWithStats]):
-    # Connect to Twitter and Telegram API
-    api = twitter_bot.connect()
+def sender(function: Callable):
+    def wrapper(*args: Any):
+        db: MySQLConnection = database.connect()
+        courses = database.retrieve_courses(db)
+        print(f"[Starting Bot] Running {function.__name__}()")
+        function(db, courses, *args)
+
+    return wrapper
+
+
+@sender
+def send_courses_to_telegram(db: MySQLConnection, courses: list[course.Course]):
+    # Get new courses
+    courses_shared_to_telegram = database.retrieve_courses_shared_to_telegram(db)
+    courses_shared_to_telegram_ids = [c.id for c in courses_shared_to_telegram]
+    new_courses = [c for c in courses if c.id not in courses_shared_to_telegram_ids]
+
+    # Send courses to Telegram
     dispatcher = tgm_bot.connect()
-
-    # Send courses
-    for course in courses:
-        print(f"[Sending] course: {course.title}")
-
-        # Send course to Telegram
+    for course_ in new_courses:
+        print(f"[Sending] course: {course_.title}")
         try:
             tgm_bot.send_course(
                 dispatcher,
-                course.link_with_coupon,
-                course.title,
-                course.rating,
-                course.students,
-                course.language,
-                course.discount_time_left,
-                course.badge,
-            )
-        except Exception as exception:
-            print(f"Could not send course to Telegram\nERROR: {exception}")
-
-        # Send course to Twitter
-        try:
-            twitter_bot.tweet_course(
-                api,
-                course.link_with_coupon,
-                course.title,
-                course.rating,
-                course.students,
-                course.language,
-                course.discount_time_left,
-                course.badge,
-            )
-        except Exception as exception:
-            print(f"Could not send course to Twitter\nERROR: {exception}")
-
-
-def _save_courses(db, courses: list[course.CourseWithStats]):
-    for course_ in courses:
-        try:
-            database.add_course(
-                db,
-                course_.id,
+                course_.link_with_coupon,
                 course_.title,
-                course_.link,
-                course_.coupon_code,
-                course_.date_found,
+                course_.rating,
+                course_.students,
+                course_.language,
+                course_.discount_time_left,
+                course_.badge,
             )
         except Exception as exception:
             print(
-                f"[Database] Could not save course {course_.title}\nERROR: {exception}"
+                "[Telegram Bot] Could not send course to Telegram",
+                f"Course Title: {course_.title}",
+                f"Error: {exception}",
+                sep="\n",
+            )
+        try:
+            database.add_course_social_media(
+                db,
+                course_.id,
+                db_settings.TELEGRAM_ID,
+                datetime.now(),
+            )
+        except Exception as exception:
+            print(
+                "[Database] Could not save course shared to Telegram",
+                f"Course Title: {course_.title}",
+                f"Error: {exception}",
+                sep="\n",
             )
 
 
-def main():
-    # Connect to database
-    db = database.connect()
+@sender
+def send_courses_to_twitter(db: MySQLConnection, courses: list[course.Course]):
+    # Get new courses
+    courses_shared_to_twitter = database.retrieve_courses_shared_to_twitter(db)
+    courses_shared_to_twitter_ids = [c.id for c in courses_shared_to_twitter]
+    new_courses = [c for c in courses if c.id not in courses_shared_to_twitter_ids]
 
-    # Retrieve shared courses
-    shared_courses = database.retrieve_courses(db)
-    shared_courses_id = [course_.id for course_ in shared_courses]
+    # Send courses to Twitter
+    api = twitter_bot.connect()
+    for course_ in new_courses:
+        print(f"[Sending] course: {course_.title}")
+        # Send course to Telegram
+        try:
+            twitter_bot.tweet_course(
+                api,
+                course_.link_with_coupon,
+                course_.title,
+                course_.rating,
+                course_.students,
+                course_.language,
+                course_.discount_time_left,
+                course_.badge,
+            )
+        except Exception as exception:
+            print(
+                "[Twitter Bot] Could not send course to Twitter",
+                f"Course Title: {course_.title}",
+                f"Error: {exception}",
+                sep="\n",
+            )
+        try:
+            database.add_course_social_media(
+                db,
+                course_.id,
+                db_settings.TWITTER_ID,
+                datetime.now(),
+            )
+        except Exception as exception:
+            print(
+                "[Database] Could not save course shared to Twitter",
+                f"Course Title: {course_.title}",
+                f"Error: {exception}",
+                sep="\n",
+            )
 
-    # Find new free courses with their stats
-    new_courses = course_handler.new_courses(shared_courses_id)
-    courses_with_stats = course_handler.add_courses_stats(new_courses)
-    free_courses = course_handler.delete_non_free_courses(courses_with_stats)
 
-    # Add courses to database
-    _save_courses(db, free_courses)
-
-    # Send courses
-    _send_courses(free_courses)
+def send_courses():
+    send_courses_to_telegram()
+    send_courses_to_twitter()
 
 
 if __name__ == "__main__":
-    main()
+    send_courses()
