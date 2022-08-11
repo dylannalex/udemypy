@@ -4,6 +4,7 @@ from udemypy.database import settings
 from udemypy.database import script
 from udemypy import course
 
+from datetime import datetime
 from mysql.connector.connection import MySQLConnection
 from mysql.connector.connection import MySQLCursor
 from mysql.connector.errors import OperationalError
@@ -74,6 +75,7 @@ def add_course(
     language: str,
     badge: str,
 ) -> None:
+    """Adds a course instance to the database."""
     script_path = script.get_path("add_course.sql")
     variables = {
         "id_value": course_id,
@@ -91,7 +93,24 @@ def add_course(
     execute_script(db, script_path, variables)
 
 
-def retrieve_courses(db: MySQLConnection) -> list[dict]:
+def add_course_social_media(
+    db: MySQLConnection,
+    course_id: int,
+    social_media_id: int,
+    date_time_shared: datetime,
+):
+    """Adds a course_social_media instance to the database."""
+    script_path = script.get_path("add_course_social_media.sql")
+    variables = {
+        "course_id_value": course_id,
+        "social_media_id_value": social_media_id,
+        "date_time_shared_value": date_time_shared,
+    }
+    execute_script(db, script_path, variables)
+
+
+def retrieve_courses(db: MySQLConnection) -> list[course.Course]:
+    """Retrieves all courses from database."""
     script_path = script.get_path("retrieve_courses.sql")
     courses = []
     for course_values in execute_script(db, script_path):
@@ -99,7 +118,29 @@ def retrieve_courses(db: MySQLConnection) -> list[dict]:
     return courses
 
 
+def retrieve_courses_shared_to_twitter(db: MySQLConnection) -> list[course.Course]:
+    """Retrieves courses that have been shared to Twitter."""
+    script_path = script.get_path("retrieve_courses_shared_to_twitter.sql")
+    courses = []
+    for course_values in execute_script(db, script_path):
+        courses.append(course.Course(*course_values))
+    return courses
+
+
+def retrieve_courses_shared_to_telegram(db: MySQLConnection) -> list[course.Course]:
+    """Retrieves courses that have been shared to Telegram."""
+    script_path = script.get_path("retrieve_courses_shared_to_telegram.sql")
+    courses = []
+    for course_values in execute_script(db, script_path):
+        courses.append(course.Course(*course_values))
+    return courses
+
+
 def remove_course(db: MySQLConnection, course_id: int) -> None:
+    """
+    Removes a course instance with their course_social_media instances
+    from database.
+    """
     script_path = script.get_path("remove_course.sql")
     variables = {"id_value": course_id}
     execute_script(db, script_path, variables)
