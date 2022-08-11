@@ -1,13 +1,25 @@
 INSERT INTO course(
-    id,
-    title, 
+	id,
+	title,
     link,
     coupon_code,
-    date_found)
-VALUES (
-    id_value,
-    title_value, 
+    date_found,
+    discount,
+    discount_time_left,
+    students,
+    rating,
+    lang,
+    badge)
+VALUES(
+	id_value,
+	title_value,
     link_value,
     coupon_code_value,
-    date_found_value
+    date_found_value,
+    discount_value,
+    discount_time_left_value,
+    students_value,
+    rating_value,
+    lang_value,
+    badge_value
 );

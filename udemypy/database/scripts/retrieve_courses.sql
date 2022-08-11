@@ -1,1 +1,1 @@
-SELECT id, title, link, coupon_code, date_found FROM course;
+SELECT * FROM course;

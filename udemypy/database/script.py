@@ -1,5 +1,6 @@
 import os
 from udemypy.database import settings
+from datetime import datetime
 
 
 def get_path(script_name: str) -> str:
@@ -17,8 +18,16 @@ def _set_variables_value(sql_script: str, variables: dict) -> str:
         return sql_script
 
     for variable, value in variables.items():
+        # String variable:
         if isinstance(value, str):
             sql_script = sql_script.replace(variable, f"'{value}'")
+        # Datetime variable:
+        elif isinstance(value, datetime):
+            value_str = value.strftime("%Y-%m-%d %H:%M:%S")
+            sql_script = sql_script.replace(variable, f"'{value_str}'")
+        # Null variable:
+        elif value is None:
+            sql_script = sql_script.replace(variable, f"NULL")
         else:
             sql_script = sql_script.replace(variable, str(value))
 
