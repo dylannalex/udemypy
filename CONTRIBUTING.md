@@ -42,7 +42,6 @@ This package is responsible for Udemy courses scraping.
 - `scraper.py`: contains `_CoursesScraper` classes, which scrapes free Udemy
   courses link from Discudemy, Udemy Freebies and Tutorial Bar; and a
   `StatsScraper` class, that scrapes courses stats from Udemy website.
-- `course.py`: contains `Course` and `CourseWithStats` classes.
 - `course_handler.py`: handles `scraper.py` scrapers.
 - `settings.py`: contains environment variables and constants used in this package.
 
@@ -79,6 +78,48 @@ This package is responsible for sharing courses to Twitter.
 - `twitter_bot.py`: handles Twitter bot.
 - `settings.py`: contains environment variables and constants used in this package.
 
+## How UdemyPy works
+
+To find, share and keep track of free Udemy courses, UdemyPy has three main
+processes.
+
+### Finding courses
+
+UdemyPy scrapes free Udemy courses, retrieves courses from the database and save
+the new free courses found.
+
+You can start this process with the command:
+
+```bash
+python -m udemypy.find_courses
+```
+
+### Removing courses
+
+UdemyPy retrieves the Udemy courses from the database and checks if they are
+still free. Courses that are no longer free are removed from the database.
+
+You can start this process with the command:
+
+```bash
+python -m udemypy.clean_database
+```
+
+### Sharing courses
+
+UdemyPy retrieves from the database the Udemy courses that haven't been shared
+to social media and posts them to Twitter and Telegram.
+
+You can start this process with the command:
+
+```bash
+python -m udemypy.send_courses
+```
+
+**Note:** the order in which this processes are executed is crucial. You have
+to find the courses before sharing them, and if you share courses before cleaning
+the database you take the risk of sharing non-free courses.
+
 ## Setup a Development Environment
 
 ### Fork and Clone UdemyPy
@@ -93,7 +134,7 @@ git clone https://github.com/your_github_username/udemypy.git
 cd udemypy
 ```
 
-Note: if you're just getting started with git, there exist great resources to
+**Note:** if you're just getting started with git, there exist great resources to
 learn and become confident about git, like <http://try.github.io/>.
 
 ### Set up a virtual environment
@@ -148,6 +189,11 @@ In this section you can find a brief description for each environment variable.
 - `ACCESS_TOKEN`: Twitter access token (**str**).
 - `ACCESS_TOKEN_SECRET`: Twitter secret access token (**str**).
 
+**Note:** you only need to set the environment variables from the package you are using, e.g.,
+if you are running `python -m udemypy.find_courses` you only need to set
+[udemypy.database](./udemypy/database/settings.py) and
+[udemypy.udemy](./udemypy/udemy/settings.py) environment variables.
+
 ## Heroku Deployment
 
 1. Create a new app.
@@ -160,8 +206,8 @@ In this section you can find a brief description for each environment variable.
     - <https://github.com/heroku/heroku-buildpack-chromedriver>.
 4. Add an environment variable named `GOOGLE_CHROME_BIN` with value
    `/app/.apt/usr/bin/google-chrome`.
-5. Add an environment variable named `CHROMEDRIVER_PATH` with value.
-   `/app/.chromedriver/bin/chromedriver`
+5. Add an environment variable named `CHROMEDRIVER_PATH` with value
+   `/app/.chromedriver/bin/chromedriver`.
 6. Set the remaining environment variables. See
    [Environment variables](#environment-variables).
 7. Deploy UdemyPy on your Heroku app.
