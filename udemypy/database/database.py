@@ -1,4 +1,5 @@
 import mysql.connector
+import time as _time
 from urllib.parse import urlparse
 from udemypy.database import settings
 from udemypy.database import script
@@ -54,6 +55,8 @@ def execute_script(
                 f"SQL command:\n{command}",
                 sep="\n",
             )
+        _time.sleep(settings.COMMAND_EXECUTION_SLEEP_TIME)
+
     # Save cursor output and close it
     cursor_output = [output for output in cursor]
     cursor.close()
