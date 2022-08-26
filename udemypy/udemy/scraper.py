@@ -55,14 +55,19 @@ class _CoursesScraper(ABC):
         if any(d["link"] == link for d in self.courses):
             # link is repeated
             return
+        link_list = link.split("/?")
+        course_link = f"{link_list[0]}/"
+
         try:
             course_id = self._get_course_id(link)
+            coupon_code = link_list[1].split("=")[1]
         except TypeError:
             # Could not find course id
             return
-        link_list = link.split("/?")
-        course_link = f"{link_list[0]}/"
-        coupon_code = link_list[1].split("=")[1]
+        except IndexError:
+            # Could not find course coupon
+            return
+
         self.courses.append(
             {
                 "id": course_id,
