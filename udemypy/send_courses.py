@@ -115,7 +115,6 @@ def send_courses_to_twitter(db: MySQLConnection, courses: list[course.Course]):
 
 def send_courses():
     send_courses_to_telegram()
-    send_courses_to_twitter()
 
 
 if __name__ == "__main__":
