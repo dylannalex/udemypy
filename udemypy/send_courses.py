@@ -5,14 +5,12 @@ from udemypy.database import database
 from udemypy.database import settings as db_settings
 
 from datetime import datetime
-
-from mysql.connector.connection import MySQLConnection
 from typing import Callable, Any
 
 
 def sender(function: Callable):
     def wrapper(*args: Any):
-        db: MySQLConnection = database.connect()
+        db: database.DataBase = database.connect()
         courses = database.retrieve_courses(db)
         print(f"[Starting Bot] Running {function.__name__}()")
         function(db, courses, *args)
@@ -21,12 +19,11 @@ def sender(function: Callable):
 
 
 @sender
-def send_courses_to_telegram(db: MySQLConnection, courses: list[course.Course]):
+def send_courses_to_telegram(db: database.DataBase, courses: list[course.Course]):
     # Get new courses
     courses_shared_to_telegram = database.retrieve_courses_shared_to_telegram(db)
     courses_shared_to_telegram_ids = [c.id for c in courses_shared_to_telegram]
     new_courses = [c for c in courses if c.id not in courses_shared_to_telegram_ids]
-
     # Send courses to Telegram
     dispatcher = tgm_bot.connect()
     for course_ in new_courses:
@@ -67,7 +64,7 @@ def send_courses_to_telegram(db: MySQLConnection, courses: list[course.Course]):
 
 
 @sender
-def send_courses_to_twitter(db: MySQLConnection, courses: list[course.Course]):
+def send_courses_to_twitter(db: database.DataBase, courses: list[course.Course]):
     # Get new courses
     courses_shared_to_twitter = database.retrieve_courses_shared_to_twitter(db)
     courses_shared_to_twitter_ids = [c.id for c in courses_shared_to_twitter]

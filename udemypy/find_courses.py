@@ -32,10 +32,9 @@ def main():
 
     # Retrieve shared courses
     courses_on_database = database.retrieve_courses(db)
-    courses_on_database_id = [course_.id for course_ in courses_on_database]
 
     # Find new free courses with their stats
-    new_courses = course_handler.new_courses(courses_on_database_id)
+    new_courses = course_handler.new_courses(courses_on_database)
     courses_with_stats = course_handler.add_courses_stats(new_courses)
     free_courses = course_handler.delete_non_free_courses(courses_with_stats)
 
