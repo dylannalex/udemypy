@@ -1,71 +1,24 @@
-import mysql.connector
-import time as _time
-from urllib.parse import urlparse
+from datetime import datetime
+from udemypy.database.connection import DataBase
+from udemypy.database import connection
 from udemypy.database import settings
 from udemypy.database import script
 from udemypy import course
 
-from datetime import datetime
-from mysql.connector.connection import MySQLConnection
-from mysql.connector.connection import MySQLCursor
-from mysql.connector.errors import OperationalError
-from typing import Callable
 
-
-def connect() -> MySQLConnection:
-    dbc = urlparse(settings.DATABASE_URL)
-    db = mysql.connector.connect(
-        host=dbc.hostname,
-        user=dbc.username,
-        database=dbc.path.lstrip("/"),
-        passwd=dbc.password,
-    )
+def connect() -> DataBase:
+    database = settings.DATABASE
+    if database == "mysql":
+        db = connection.MySqlDataBase(settings.DATABASE_URL)
+    elif database == "sqlite3":
+        db = connection.Sqlite3DataBase(settings.LOCAL_DATABASE_PATH)
+    else:
+        raise ValueError(f"{database} is not a valid database")
     return db
 
 
-def database_access(function: Callable):
-    def wrapper(db: MySQLConnection, *args):
-        for _ in range(settings.RECONNECTION_ATTEMPTS):
-            try:
-                return function(db, *args)
-            except OperationalError:
-                db.reconnect()
-
-    return wrapper
-
-
-@database_access
-def execute_script(
-    db: MySQLConnection, filename: str, variables: dict = None
-) -> MySQLCursor:
-    sql_commands = script.read_script(filename, variables)
-    cursor = db.cursor()
-
-    # Execute commands
-    for command in sql_commands:
-        try:
-            cursor.execute(command)
-            # Save modifications on database (if any)
-            if script.modifies_database_state(command):
-                db.commit()
-        except Exception as exception:
-            print(
-                "[Database] Could not execute command",
-                f"Error: {exception}",
-                f"SQL command:\n{command}",
-                sep="\n",
-            )
-        _time.sleep(settings.COMMAND_EXECUTION_SLEEP_TIME)
-
-    # Save cursor output and close it
-    cursor_output = [output for output in cursor]
-    cursor.close()
-
-    return cursor_output
-
-
 def add_course(
-    db: MySQLConnection,
+    db: DataBase,
     course_id: int,
     course_title: str,
     course_link: str,
@@ -93,11 +46,12 @@ def add_course(
         "lang_value": language,
         "badge_value": badge,
     }
-    execute_script(db, script_path, variables)
+    sql_script = script.read_script(script_path, variables)
+    db.execute_script(sql_script, commit=True)
 
 
 def add_course_social_media(
-    db: MySQLConnection,
+    db: DataBase,
     course_id: int,
     social_media_id: int,
     date_time_shared: datetime,
@@ -109,41 +63,46 @@ def add_course_social_media(
         "social_media_id_value": social_media_id,
         "date_time_shared_value": date_time_shared,
     }
-    execute_script(db, script_path, variables)
+    sql_script = script.read_script(script_path, variables)
+    db.execute_script(sql_script, commit=True)
 
 
-def retrieve_courses(db: MySQLConnection) -> list[course.Course]:
+def retrieve_courses(db: DataBase) -> list[course.Course]:
     """Retrieves all courses from database."""
     script_path = script.get_path("retrieve_courses.sql")
+    sql_script = script.read_script(script_path)
     courses = []
-    for course_values in execute_script(db, script_path):
+    for course_values in db.execute_script(sql_script, commit=False):
         courses.append(course.Course(*course_values))
     return courses
 
 
-def retrieve_courses_shared_to_twitter(db: MySQLConnection) -> list[course.Course]:
+def retrieve_courses_shared_to_twitter(db: DataBase) -> list[course.Course]:
     """Retrieves courses that have been shared to Twitter."""
     script_path = script.get_path("retrieve_courses_shared_to_twitter.sql")
+    sql_script = script.read_script(script_path)
     courses = []
-    for course_values in execute_script(db, script_path):
+    for course_values in db.execute_script(sql_script, commit=False):
         courses.append(course.Course(*course_values))
     return courses
 
 
-def retrieve_courses_shared_to_telegram(db: MySQLConnection) -> list[course.Course]:
+def retrieve_courses_shared_to_telegram(db: DataBase) -> list[course.Course]:
     """Retrieves courses that have been shared to Telegram."""
     script_path = script.get_path("retrieve_courses_shared_to_telegram.sql")
+    sql_script = script.read_script(script_path)
     courses = []
-    for course_values in execute_script(db, script_path):
+    for course_values in db.execute_script(sql_script, commit=False):
         courses.append(course.Course(*course_values))
     return courses
 
 
-def remove_course(db: MySQLConnection, course_id: int) -> None:
+def remove_course(db: DataBase, course_id: int) -> None:
     """
     Removes a course instance with their course_social_media instances
     from database.
     """
     script_path = script.get_path("remove_course.sql")
     variables = {"id_value": course_id}
-    execute_script(db, script_path, variables)
+    sql_script = script.read_script(script_path, variables)
+    db.execute_script(sql_script, commit=True)

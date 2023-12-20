@@ -43,7 +43,7 @@ def read_script(filename: str, variables: dict = None) -> list[str]:
     # Replace variables with their values
     sql_script = _set_variables_value(sql_script, variables)
 
-    return sql_script.split(";")
+    return sql_script
 
 
 def modifies_database_state(sql_command: str) -> bool:

@@ -1,5 +1,7 @@
 from os import getenv
 
+LOCAL_DATABASE_PATH = "courses.db"
+DATABASE = getenv("DATABASE")
 DATABASE_URL = getenv("DATABASE_URL")
 COURSE_LIFETIME = int(getenv("COURSE_LIFETIME"))
 
