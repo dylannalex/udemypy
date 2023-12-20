@@ -20,7 +20,6 @@ Scrapes Udemy courses links from a free courses website.
 
 
 class _CoursesScraper(ABC):
-
     HEAD = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36",
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
@@ -45,12 +44,6 @@ class _CoursesScraper(ABC):
 
         return all
 
-    def _get_course_id(self, course_link):
-        r = requests.get(course_link, headers=self.HEAD, verify=False)
-        soup = bs(r.content, "html5lib")
-        rating = soup.find("body", id="udemy")
-        return rating["data-clp-course-id"]
-
     def _add_course(self, title, link) -> None:
         if any(d["link"] == link for d in self.courses):
             # link is repeated
@@ -59,18 +52,13 @@ class _CoursesScraper(ABC):
         course_link = f"{link_list[0]}/"
 
         try:
-            course_id = self._get_course_id(link)
             coupon_code = link_list[1].split("=")[1]
-        except TypeError:
-            # Could not find course id
-            return
         except IndexError:
             # Could not find course coupon
             return
 
         self.courses.append(
             {
-                "id": course_id,
                 "title": title,
                 "link": course_link,
                 "coupon_code": coupon_code,
@@ -151,7 +139,6 @@ Scrape Udemy course statistics (rating, students, etc).
 
 
 class StatsScraper:
-
     SLEATH_SETTINGS = {
         "languages": ["en-US", "en"],
         "vendor": "Google Inc.",
@@ -167,6 +154,7 @@ class StatsScraper:
         options = webdriver.ChromeOptions()
         options.add_argument("start-maximized")
         options.add_argument("log-level=3")
+        options.add_argument("--disable-gpu")
         options.add_argument("--headless")
         options.add_argument("--disable-dev-shm-usage")
         options.add_argument("--no-sandbox")
@@ -193,6 +181,7 @@ class StatsScraper:
         sleep(self.page_load_time)
         soup = bs(self.driver.page_source, "html5lib")
         # Get stats
+        id = self._get_id(soup)
         discount = self._get_discount(soup)
         discount_time_left = self._get_discount_time_left(soup)
         rating = self._get_rating(soup)
@@ -200,6 +189,7 @@ class StatsScraper:
         language = self._get_language(soup)
         badge = self._get_badge(soup)
         return {
+            "id": id,
             "discount": discount,
             "discount_time_left": discount_time_left,
             "rating": rating,
@@ -208,25 +198,29 @@ class StatsScraper:
             "badge": badge,
         }
 
+    def _get_id(self, soup):
+        id = soup.find("body", id="udemy")
+        return id["data-clp-course-id"]
+
     def _get_discount(self, soup):
         discount = soup.find(
             "div",
-            class_="price-text--price-part--2npPm udlite-clp-percent-discount udlite-text-sm",
+            class_="price-text--price-part--2npPm ud-clp-percent-discount ud-text-sm",
         )
         discount_percentage = re.findall("[0-9]+", discount.text)[0]
         return int(discount_percentage)
 
     def _get_discount_time_left(self, soup):
         discount_time_left = soup.find(
-            "div",
-            class_="discount-expiration--discount-expiration--2cPY2",
+            "span",
+            {
+                "data-purpose": "safely-set-inner-html:discount-expiration:expiration-text"
+            },
         )
         return discount_time_left.text.split("left")[0]
 
     def _get_rating(self, soup):
-        rating = soup.find(
-            "span", class_="udlite-heading-sm star-rating--rating-number--2o8YM"
-        )
+        rating = soup.find("span", {"data-purpose": "rating-number"})
         return rating.text
 
     def _get_students(self, soup):
