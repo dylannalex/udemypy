@@ -77,6 +77,20 @@ def retrieve_courses(db: DataBase) -> list[course.Course]:
     return courses
 
 
+def retrieve_courses_shared_to_social_media(
+    db: DataBase,
+    social_media_name: str,
+) -> list[course.Course]:
+    """Retrieves courses that have been shared to a given social media."""
+    script_path = script.get_path("retrieve_courses_shared.sql")
+    variables = {"social_media_name_value": social_media_name}
+    sql_script = script.read_script(script_path)
+    courses = []
+    for course_values in db.execute_script(sql_script, commit=False):
+        courses.append(course.Course(*course_values))
+    return courses
+
+
 def retrieve_courses_shared_to_twitter(db: DataBase) -> list[course.Course]:
     """Retrieves courses that have been shared to Twitter."""
     script_path = script.get_path("retrieve_courses_shared_to_twitter.sql")
