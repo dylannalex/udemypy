@@ -26,15 +26,22 @@ def _save_courses(db, courses: list[course.Course]):
             )
 
 
-def main():
+def find_courses(verbose: bool):
     # Connect to database
     db = database.connect()
 
     # Retrieve shared courses
     courses_on_database = database.retrieve_courses(db)
 
+    if verbose:
+        print(f"[-] {len(courses_on_database)} courses on database")
+
     # Find new free courses with their stats
     new_courses = course_handler.new_courses(courses_on_database)
+
+    if verbose:
+        print(f"[-] {len(new_courses)} new courses found")
+
     courses_with_stats = course_handler.add_courses_stats(new_courses)
     free_courses = course_handler.delete_non_free_courses(courses_with_stats)
 
@@ -43,4 +50,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    find_courses(True)
