@@ -239,6 +239,10 @@ class StatsScraper:
             "div",
             class_=re.compile("udlite-badge udlite-heading-xs.*"),
         )
-        if not badge:
+        badge = soup.find(
+            "div",
+            class_="clp-lead__element-item",
+        )
+        if badge is None:
             return None
         return badge.text

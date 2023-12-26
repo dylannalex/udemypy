@@ -59,7 +59,7 @@ class WhatsAppBot(SenderBot):
         # Get message
         message = _get_message(
             course.title,
-            course.link,
+            course.link_with_coupon,
             course.rating,
             course.students,
             course.language,

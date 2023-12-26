@@ -65,7 +65,7 @@ class TelegramBot(SenderBot):
         course_students = markdown_validation.get_valid_text(course.students)
 
         get_course_button = InlineKeyboardButton(
-            text=__class__.get_course_button_text, url=course.link
+            text=__class__.get_course_button_text, url=course.link_with_coupon
         )
 
         share_button = InlineKeyboardButton(
@@ -88,12 +88,12 @@ class TelegramBot(SenderBot):
             parse_mode="MarkdownV2",
             text=_message_title(
                 course_title,
-                course.link,
+                course_link,
                 course_rating,
                 course_students,
-                course.language,
-                course.discount_time_left,
-                course.badge,
+                course_language,
+                course_discount_time_left,
+                course_badge,
             ),
             chat_id=self.channel_id,
             reply_markup=InlineKeyboardMarkup(
