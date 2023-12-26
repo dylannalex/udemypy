@@ -2,6 +2,7 @@ from os import getenv
 
 # Sender Bots
 GITHUB_LINK = "https://github.com/dylannalex/udemypy"
+WHATSAPP_LINK = "https://whatsapp.com/channel/0029VaHwvWZ7NoZsk8UOUl0z"
 
 ## Telegram
 TOKEN = getenv("TOKEN")

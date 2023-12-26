@@ -13,6 +13,7 @@ def get_bot(social_media_name: str) -> SenderBot:
             settings.CHANNEL_ID,
             settings.CHANNEL_LINK,
             settings.GITHUB_LINK,
+            settings.WHATSAPP_LINK,
         )
 
     if social_media_name == db_settings.WHATSAPP_NAME:
@@ -25,9 +26,6 @@ def send_courses(
     social_media_name: str,
     social_media_id: int,
 ) -> None:
-    bot = get_bot(social_media_name)
-    bot.connect()
-
     # Get new courses to share
     db: database.DataBase = database.connect()
     courses = database.retrieve_courses(db)
@@ -37,6 +35,15 @@ def send_courses(
     )
     courses_shared_id = [c.id for c in courses_shared]
     new_courses = [c for c in courses if c.id not in courses_shared_id]
+
+    print(f"[-] {len(new_courses)} new courses to share!")
+
+    if len(new_courses) == 0:
+        return
+
+    # Create bot
+    bot = get_bot(social_media_name)
+    bot.connect()
 
     # Share new courses
     for course_ in new_courses:

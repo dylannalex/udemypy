@@ -14,11 +14,13 @@ def _get_message(
 ) -> str:
     message = [
         f"_{title}_ {emojis.BOOKS}",
-        f"* {emojis.STAR} {rating}/5",
-        f"* {emojis.PEOPLE_SILHOUETTE} {students} students",
-        f"* {emojis.GLOBE} {language.capitalize()}",
-        f"* {emojis.HOURGLASS} Free for {discount_time_left}",
-        f"* {emojis.LINK} {link}",
+        " ",
+        f"{emojis.STAR} {rating}/5",
+        f"{emojis.PEOPLE_SILHOUETTE} {students} students",
+        f"{emojis.GLOBE} {language.capitalize()}",
+        f"{emojis.HOURGLASS} Free for {discount_time_left}",
+        f"{emojis.LINK} {link}",
+        " ",
         f"Follow me for more free Udemy courses {emojis.HEART}",
     ]
 

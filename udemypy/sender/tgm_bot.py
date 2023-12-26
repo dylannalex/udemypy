@@ -7,6 +7,7 @@ from udemypy.course import Course
 from udemypy.sender.text import markdown_validation
 from udemypy.sender.text import emojis
 from udemypy.sender.bot import SenderBot
+from time import sleep
 
 
 def _message_title(
@@ -35,14 +36,23 @@ class TelegramBot(SenderBot):
     donate_button_text = f"Donate me {emojis.HEART}"
     twitter_button_text = f"Free Courses on Twitter {emojis.FRONT_FACING_CHICK}"
     github_repo_text = f"GitHub Repo {emojis.HAPPY_CAT}"
+    whatsapp_repo_text = f"Free Courses on WhatsApp {emojis.SPARKLES}"
 
     def __init__(
-        self, token: str, channel_id: str, channel_link: str, github_link: str
+        self,
+        token: str,
+        channel_id: str,
+        channel_link: str,
+        github_link: str,
+        whatsapp_link: str,
+        sleep_time_per_course: int = 5,
     ):
         self.token = token
         self.channel_id = channel_id
         self.channel_link = channel_link
         self.github_link = github_link
+        self.whatsapp_link = whatsapp_link
+        self.sleep_time_per_course = sleep_time_per_course
 
     def connect(self) -> None:
         bot = telegram.Bot(token=self.token)
@@ -70,6 +80,10 @@ class TelegramBot(SenderBot):
             text=__class__.github_repo_text, url=self.github_link
         )
 
+        whatsapp_button = InlineKeyboardButton(
+            text=__class__.whatsapp_repo_text, url=self.whatsapp_link
+        )
+
         self.dispatcher.bot.sendMessage(
             parse_mode="MarkdownV2",
             text=_message_title(
@@ -83,6 +97,7 @@ class TelegramBot(SenderBot):
             ),
             chat_id=self.channel_id,
             reply_markup=InlineKeyboardMarkup(
-                [[get_course_button], [share_button, github_button]],
+                [[get_course_button], [share_button, github_button], [whatsapp_button]]
             ),
         )
+        sleep(self.sleep_time_per_course)
