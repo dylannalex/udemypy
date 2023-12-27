@@ -99,6 +99,7 @@ class Sqlite3DataBase(DataBase):
         self.con.commit()
 
     def reconnect(self):
+        self.close()
         self.connect()
 
     def close(self):
