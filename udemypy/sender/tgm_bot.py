@@ -4,9 +4,9 @@ from telegram import InlineKeyboardMarkup
 from telegram import InlineKeyboardButton
 from telegram.ext.dispatcher import Dispatcher
 from udemypy.course import Course
-from udemypy.sender.text import markdown_validation
 from udemypy.sender.text import emojis
 from udemypy.sender.bot import SenderBot
+from udemypy.sender.text.markdown_validation import get_valid_text
 from time import sleep
 
 
@@ -60,9 +60,13 @@ class TelegramBot(SenderBot):
         self.dispatcher: Dispatcher = updater.dispatcher
 
     def send_course(self, course: Course) -> None:
-        course_title = markdown_validation.get_valid_text(course.title)
-        course_rating = markdown_validation.get_valid_text(course.rating)
-        course_students = markdown_validation.get_valid_text(course.students)
+        course_title = get_valid_text(course.title)
+        course_link = get_valid_text(course.link_with_coupon)
+        course_language = get_valid_text(course.language)
+        course_rating = get_valid_text(course.rating)
+        course_students = get_valid_text(course.students)
+        course_discount_time_left = get_valid_text(course.discount_time_left)
+        course_badge = course.badge
 
         get_course_button = InlineKeyboardButton(
             text=__class__.get_course_button_text, url=course.link_with_coupon

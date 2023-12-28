@@ -25,17 +25,19 @@ def _get_message(
     ]
 
     # Add course badge (if any)
-    _badge_index = 1
+    _badge_index = 2
     if badge:
-        message.insert(_badge_index, f"* {emojis.TROPHY}{badge}")
+        message.insert(_badge_index, f"{emojis.TROPHY} {badge}")
 
     return "\n".join(message)
 
 
 class WhatsAppBot(SenderBot):
     text_box_class_name = "_3Uu1_"
+    time_after_writing = 10
+    time_between_message = 2
 
-    def __init__(self, chromedriver_path: str, wait_time: int = 2):
+    def __init__(self, chromedriver_path: str):
         options = webdriver.ChromeOptions()
         options.add_argument("start-maximized")
         options.add_argument("log-level=3")
@@ -47,7 +49,6 @@ class WhatsAppBot(SenderBot):
         self.driver = webdriver.Chrome(
             options=options, executable_path=chromedriver_path
         )
-        self.wait_time = wait_time
 
     def connect(self) -> None:
         print("[BOT] Loading WhatsApp...")
@@ -75,5 +76,6 @@ class WhatsAppBot(SenderBot):
         )
         text_box.click()
         act.key_down(Keys.CONTROL).send_keys("v").key_up(Keys.CONTROL).perform()
+        sleep(__class__.time_after_writing)
         text_box.send_keys(Keys.RETURN)
-        sleep(self.wait_time)
+        sleep(__class__.time_between_message)

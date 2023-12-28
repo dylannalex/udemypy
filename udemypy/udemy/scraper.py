@@ -245,4 +245,8 @@ class StatsScraper:
         )
         if badge is None:
             return None
+
+        if badge.text.startswith("Rating"):
+            return None
+
         return badge.text

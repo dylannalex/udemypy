@@ -26,10 +26,7 @@ def _save_courses(db, courses: list[course.Course]):
             )
 
 
-def find_courses(verbose: bool):
-    # Connect to database
-    db = database.connect()
-
+def find_courses(db: database.DataBase, verbose: bool):
     # Retrieve shared courses
     courses_on_database = database.retrieve_courses(db)
 
