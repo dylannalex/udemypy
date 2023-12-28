@@ -2,14 +2,7 @@
   <img width="350" height="350" src="../media/udemypy-logo.png?raw=true">
 </p>
 
-UdemyPy is an open source bot that shares free Udemy courses on:
-- [Telegram](https://t.me/freecourses000)
-- [Twitter](https://twitter.com/UdemyPy)
-
-This project aims to make learning free for everybody. To achieve this, UdemyPy
-looks for Udemy courses with a **100% discount** and shares them on social media,
-so they become accessible for everyone.
-
+UdemyPy is an open-source Python project with the mission of making education accessible to everybody. It brings free Udemy courses directly to you on [Telegram](https://t.me/freecourses000) and [WhatsApp](https://www.whatsapp.com/channel/0029VaHwvWZ7NoZsk8UOUl0z).
 
 ## :electric_plug: Why follow UdemyPy?
 
