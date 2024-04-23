@@ -203,10 +203,7 @@ class StatsScraper:
         return id["data-clp-course-id"]
 
     def _get_discount(self, soup):
-        discount = soup.find(
-            "div",
-            class_="price-text--price-part--2npPm ud-clp-percent-discount ud-text-sm",
-        )
+        discount = soup.find("div", {"data-purpose": "discount-percentage"})
         discount_percentage = re.findall("[0-9]+", discount.text)[0]
         return int(discount_percentage)
 
