@@ -1,5 +1,6 @@
 from udemypy import course
 from udemypy.udemy import course_handler
+from udemypy.udemy import settings as udy_setts
 from udemypy.database import database
 
 
@@ -38,6 +39,17 @@ def find_courses(db: database.DataBase, verbose: bool):
 
     if verbose:
         print(f"[-] {len(new_courses)} new courses found")
+
+        # Check if new courses found don't exceed the max courses to send
+        # limit
+        if len(new_courses) > udy_setts.MAX_COURSES_TO_SEND:
+            print(
+                f"[-] Total courses found exceed the limit of {udy_setts.MAX_COURSES_TO_SEND}",
+            )
+            print(
+                f"[-] Removing {len(new_courses) - udy_setts.MAX_COURSES_TO_SEND} courses from `new_courses` list",
+            )
+            new_courses = new_courses[0 : udy_setts.MAX_COURSES_TO_SEND]
 
     courses_with_stats = course_handler.add_courses_stats(new_courses)
     free_courses = course_handler.delete_non_free_courses(courses_with_stats)
