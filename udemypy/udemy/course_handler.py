@@ -116,3 +116,23 @@ def delete_free_courses(
     that are free (those which discount is 100%)
     """
     return [c for c in courses if c.discount < settings.FREE_COURSE_DISCOUNT]
+
+
+def delete_old_courses(
+    courses: list[course.Course], course_lifetime: int
+) -> list[course.Course]:
+    """
+    Given a list of course.Course, removes the courses that have
+    been store longer than the course lifetime.
+    """
+    from datetime import datetime
+
+    courses_to_delete = []
+    for c in courses:
+        start_date = datetime.strptime(c.date_found, "%Y-%m-%d %H:%M:%S")
+        end_date = datetime.now()
+        delta = end_date - start_date
+        if delta.days >= course_lifetime:
+            courses_to_delete.append(c)
+
+    return courses_to_delete
