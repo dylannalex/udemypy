@@ -1,10 +1,10 @@
-import os
 from enum import Enum
 
 from udemypy import course
 from udemypy.database import database
 from udemypy.database import settings as db_setts
 from udemypy.udemy import course_handler
+from udemypy.utils import clear_console
 
 
 class CleaningStrategy(Enum):
@@ -34,7 +34,7 @@ def clean_database(strategies: list[CleaningStrategy]) -> None:
     db = database.connect()
     courses = database.retrieve_courses(db)
     courses_to_remove = []
-    os.system("cls")
+    clear_console()
     print(f"[Stats] Courses on database: {len(courses)}")
 
     # Find courses to remove
