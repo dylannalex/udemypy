@@ -162,9 +162,12 @@ class StatsScraper:
         options.add_experimental_option("useAutomationExtension", False)
         if google_chrome_bin:
             options.binary_location = google_chrome_bin
-        self.driver = webdriver.Chrome(
-            options=options, executable_path=chromedriver_path
-        )
+        if chromedriver_path:
+            self.driver = webdriver.Chrome(
+                options=options, executable_path=chromedriver_path
+            )
+        else:
+            self.driver = webdriver.Chrome(options=options)
         stealth(
             self.driver,
             languages=StatsScraper.SLEATH_SETTINGS["languages"],
