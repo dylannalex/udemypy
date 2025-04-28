@@ -1,3 +1,8 @@
+from time import sleep
+from abc import abstractmethod
+from abc import ABC
+from datetime import datetime, timedelta
+
 from udemypy import send_courses
 from udemypy import find_courses
 from udemypy.database import database
@@ -5,11 +10,7 @@ from udemypy.database import settings as db_settings
 from udemypy.udemy import settings as ud_settings
 from udemypy import settings
 from udemypy.sender import TelegramBot, WhatsAppBot
-from datetime import datetime, timedelta
-from abc import abstractmethod
-from abc import ABC
-from time import sleep
-from os import system
+from udemypy.utils import clear_console
 
 
 class BotHandler(ABC):
@@ -69,7 +70,7 @@ def schedule_bots(
 
     for iteration in range(iterations):
         # Find courses
-        system("cls")
+        clear_console()
         print(f"[Iteration N°{iteration}]")
         print("[Finding Courses]")
         find_courses.find_courses(db, verbose=True)

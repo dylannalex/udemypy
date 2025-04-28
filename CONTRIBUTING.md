@@ -194,20 +194,4 @@ if you are running `python -m udemypy.find_courses` you only need to set
 [udemypy.database](./udemypy/database/settings.py) and
 [udemypy.udemy](./udemypy/udemy/settings.py) environment variables.
 
-## Heroku Deployment
 
-1. Create a new app.
-2. Add [ClearDB MySQL add-on](https://elements.heroku.com/addons/cleardb). This will
-   create an environment variable named `CLEARDB_DATABASE_URL` with the database
-   connection URL. You have to create a new environment variable named `DATABASE_URL`
-   with this URL (since you cannot rename `CLEARDB_DATABASE_URL`).
-3. Add build packs required for selenium webdriver:
-    - <https://github.com/heroku/heroku-buildpack-google-chrome>.
-    - <https://github.com/heroku/heroku-buildpack-chromedriver>.
-4. Add an environment variable named `GOOGLE_CHROME_BIN` with value
-   `/app/.apt/usr/bin/google-chrome`.
-5. Add an environment variable named `CHROMEDRIVER_PATH` with value
-   `/app/.chromedriver/bin/chromedriver`.
-6. Set the remaining environment variables. See
-   [Environment variables](#environment-variables).
-7. Deploy UdemyPy on your Heroku app.

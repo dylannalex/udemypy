@@ -2,8 +2,20 @@ from typing import Any
 from abc import ABC
 from abc import abstractmethod
 from urllib.parse import urlparse
-import mysql.connector
-import sqlite3
+
+try:
+    import mysql.connector
+    print("[Info] MySQL connector imported successfully")
+except ImportError:
+    print(
+        f"[Warning] Cannot use MySQL connector. To use MySQL, install mysql-connector-python"
+    )
+try:
+
+    import sqlite3
+    print("[Info] SQLite imported successfully")
+except ImportError as e:
+    print(f"[Warning] Cannot use SQLite. To use SQLite, install sqlite3")
 
 
 class DataBase(ABC):

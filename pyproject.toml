@@ -1,0 +1,22 @@
+[project]
+name = "udemypy"
+version = "0.0.1"
+description = "Free Udemy courses everyday!"
+requires-python = ">=3.9"
+dependencies = [
+  "urllib3>=1.26",
+  "requests>=2.31",
+  "selenium>=4.10",
+  "selenium-stealth>=1.0.6",
+  "beautifulsoup4>=4.9",
+  "python-telegram-bot>=20.0",
+  "html5lib>=1.1",
+  "pyperclip>=1.9.0",
+]
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["udemypy"]

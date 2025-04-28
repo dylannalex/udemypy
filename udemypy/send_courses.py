@@ -1,6 +1,7 @@
+from datetime import datetime
+
 from udemypy.database import database
 from udemypy.sender import SenderBot
-from datetime import datetime
 
 
 def _get_courses(

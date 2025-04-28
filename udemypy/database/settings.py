@@ -1,9 +1,10 @@
-from os import getenv
+import os
 
-LOCAL_DATABASE_PATH = "courses.db"
-DATABASE = getenv("DATABASE")
-DATABASE_URL = getenv("DATABASE_URL")
-COURSE_LIFETIME = getenv("COURSE_LIFETIME")
+
+LOCAL_DATABASE_PATH = os.path.join("data", "courses.db")
+DATABASE = os.getenv("DATABASE")
+DATABASE_URL = os.getenv("DATABASE_URL")
+COURSE_LIFETIME = os.getenv("COURSE_LIFETIME")
 COURSE_LIFETIME = None if COURSE_LIFETIME is None else int(COURSE_LIFETIME)
 
 
