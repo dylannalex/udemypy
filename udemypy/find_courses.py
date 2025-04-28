@@ -59,4 +59,5 @@ def find_courses(db: database.DataBase, verbose: bool):
 
 
 if __name__ == "__main__":
-    find_courses(True)
+    db = database.connect()
+    find_courses(db, verbose=True)
