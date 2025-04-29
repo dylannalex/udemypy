@@ -2,7 +2,6 @@ import telegram
 from telegram.ext import Updater
 from telegram import InlineKeyboardMarkup
 from telegram import InlineKeyboardButton
-from telegram.ext.dispatcher import Dispatcher
 from udemypy.course import Course
 from udemypy.sender.text import emojis
 from udemypy.sender.bot import SenderBot
@@ -57,7 +56,7 @@ class TelegramBot(SenderBot):
     def connect(self) -> None:
         bot = telegram.Bot(token=self.token)
         updater = Updater(bot.token, use_context=True)
-        self.dispatcher: Dispatcher = updater.dispatcher
+        self.dispatcher = updater.dispatcher
 
     def send_course(self, course: Course) -> None:
         course_title = get_valid_text(course.title)
