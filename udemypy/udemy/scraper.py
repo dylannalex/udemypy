@@ -2,6 +2,7 @@ import re
 import urllib3
 import requests
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
 from selenium_stealth import stealth
 from bs4 import BeautifulSoup as bs
 from abc import ABC
@@ -163,8 +164,9 @@ class StatsScraper:
         if google_chrome_bin:
             options.binary_location = google_chrome_bin
         if chromedriver_path:
+            service = Service(chromedriver_path)
             self.driver = webdriver.Chrome(
-                options=options, executable_path=chromedriver_path
+                options=options, service=service
             )
         else:
             self.driver = webdriver.Chrome(options=options)
